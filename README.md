@@ -30,11 +30,6 @@ Whether you're preparing for exams, managing assignments, or organizing your wee
 - Mark tasks as completed
 - Track pending activities
 
-### ⏰ Deadline Tracking
-- Assignment reminders
-- Upcoming exam tracking
-- Important academic deadlines
-
 ### 📊 Progress Tracking
 - Monitor study progress
 - View completed vs pending tasks
