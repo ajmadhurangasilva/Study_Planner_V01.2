@@ -1,33 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { DAYS_OF_WEEK } from '../utils/slqfPresets';
 import { getRescheduleSuggestion } from '../utils/slqfAlgorithm';
-import { Calendar, Download, Printer, Filter, ArrowLeft, ArrowRight, AlertTriangle, CheckCircle2, XCircle, Trophy, RefreshCw, ChevronRight, BarChart2 } from 'lucide-react';
+import { Calendar, Download, Printer, Filter, ArrowLeft, ArrowRight, AlertTriangle, CheckCircle2, XCircle, Trophy, RefreshCw, ChevronRight, BarChart2, Plus, Users, PhoneCall, Mail, BookOpen } from 'lucide-react';
 import { exportToICalendar, printSchedule } from '../utils/exportUtils';
 import confetti from 'canvas-confetti';
+import { getScopedStorage } from '../utils/authStore';
+import CreateTaskModal from './CreateTaskModal';
 
-export default function ScheduleView({ planResult, freeTimeByDay, onPrevStep, onNextStep }) {
+export default function ScheduleView({ planResult, freeTimeByDay, currentUser, onPrevStep, onNextStep }) {
   const [activeWeek, setActiveWeek] = useState(null); 
   const [selectedDay, setSelectedDay] = useState('ALL');
   const [selectedModuleFilter, setSelectedModuleFilter] = useState('ALL');
+  const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
+  const [customTasks, setCustomTasks] = useState([]);
 
-  // Track Completed and Incomplete Task IDs
-  const [completedTaskIds, setCompletedTaskIds] = useState(() => {
-    const saved = localStorage.getItem('slqf_completed_tasks');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [incompleteTaskIds, setIncompleteTaskIds] = useState(() => {
-    const saved = localStorage.getItem('slqf_incomplete_tasks');
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Per-user scoped storage helper
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [completedTaskIds, setCompletedTaskIds] = useState([]);
+  const [incompleteTaskIds, setIncompleteTaskIds] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('slqf_completed_tasks', JSON.stringify(completedTaskIds));
-  }, [completedTaskIds]);
+    if (!currentUser) {
+      try {
+        const savedC = localStorage.getItem('slqf_completed_tasks');
+        const savedI = localStorage.getItem('slqf_incomplete_tasks');
+        if (savedC) setCompletedTaskIds(JSON.parse(savedC));
+        if (savedI) setIncompleteTaskIds(JSON.parse(savedI));
+      } catch {}
+      setIsLoaded(true);
+      return;
+    }
+
+    const store = getScopedStorage(currentUser.username);
+    Promise.all([
+      Promise.resolve(store.get('completed_tasks', [])),
+      Promise.resolve(store.get('incomplete_tasks', [])),
+    ]).then(([completed, incomplete]) => {
+      setCompletedTaskIds(Array.isArray(completed) ? completed : []);
+      setIncompleteTaskIds(Array.isArray(incomplete) ? incomplete : []);
+      setIsLoaded(true);
+    });
+  }, [currentUser]);
 
   useEffect(() => {
-    localStorage.setItem('slqf_incomplete_tasks', JSON.stringify(incompleteTaskIds));
-  }, [incompleteTaskIds]);
+    if (!isLoaded) return;
+    if (currentUser) {
+      getScopedStorage(currentUser.username).set('completed_tasks', completedTaskIds);
+    } else {
+      localStorage.setItem('slqf_completed_tasks', JSON.stringify(completedTaskIds));
+    }
+  }, [completedTaskIds, isLoaded, currentUser]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (currentUser) {
+      getScopedStorage(currentUser.username).set('incomplete_tasks', incompleteTaskIds);
+    } else {
+      localStorage.setItem('slqf_incomplete_tasks', JSON.stringify(incompleteTaskIds));
+    }
+  }, [incompleteTaskIds, isLoaded, currentUser]);
 
   if (!planResult || !planResult.schedule) {
     return (
@@ -393,9 +424,6 @@ export default function ScheduleView({ planResult, freeTimeByDay, onPrevStep, on
             }}>
               {DAYS_OF_WEEK.map((day) => {
                 const daySessions = filteredSchedule.filter((s) => s.day === day);
-                const totalHoursToday = Math.round(
-                  daySessions.reduce((acc, s) => acc + s.sessionLength / 60, 0) * 10
-                ) / 10;
                 const dayCompletedCount = daySessions.filter((s) => completedTaskIds.includes(s.id)).length;
 
                 return (

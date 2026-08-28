@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { generateMonthlyRecommendations } from '../utils/slqfAlgorithm';
 import { PieChart, ShieldAlert, CheckCircle, Zap, BookOpen, Clock, AlertCircle, ArrowLeft, Trophy, Sparkles, TrendingUp, BarChart2, XCircle } from 'lucide-react';
+import { getScopedStorage } from '../utils/authStore';
 
-export default function AnalyticsView({ planResult, onPrevStep }) {
+export default function AnalyticsView({ planResult, currentUser, onPrevStep }) {
+  const [completedTaskIds, setCompletedTaskIds] = useState([]);
+  const [incompleteTaskIds, setIncompleteTaskIds] = useState([]);
+
+  useEffect(() => {
+    if (currentUser) {
+      const store = getScopedStorage(currentUser.username);
+      Promise.all([
+        Promise.resolve(store.get('completed_tasks', [])),
+        Promise.resolve(store.get('incomplete_tasks', [])),
+      ]).then(([completed, incomplete]) => {
+        setCompletedTaskIds(Array.isArray(completed) ? completed : []);
+        setIncompleteTaskIds(Array.isArray(incomplete) ? incomplete : []);
+      });
+    } else {
+      try {
+        setCompletedTaskIds(JSON.parse(localStorage.getItem('slqf_completed_tasks') || '[]'));
+        setIncompleteTaskIds(JSON.parse(localStorage.getItem('slqf_incomplete_tasks') || '[]'));
+      } catch {}
+    }
+  }, [currentUser]);
+
   if (!planResult || !planResult.moduleAnalytics) {
     return (
       <div className="glass-card" style={{ padding: '3rem', textAlign: 'center', maxWidth: '600px', margin: '3rem auto' }}>
@@ -27,10 +49,6 @@ export default function AnalyticsView({ planResult, onPrevStep }) {
     moduleAnalytics,
     schedule
   } = planResult;
-
-  // Retrieve Completed and Incomplete task IDs from LocalStorage
-  const completedTaskIds = JSON.parse(localStorage.getItem('slqf_completed_tasks') || '[]');
-  const incompleteTaskIds = JSON.parse(localStorage.getItem('slqf_incomplete_tasks') || '[]');
 
   const monthlyRecs = generateMonthlyRecommendations(
     schedule,

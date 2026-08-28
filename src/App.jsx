@@ -5,7 +5,9 @@ import ModuleInputStep from './components/ModuleInputStep';
 import FreeTimeInputStep from './components/FreeTimeInputStep';
 import ScheduleView from './components/ScheduleView';
 import AnalyticsView from './components/AnalyticsView';
+import AuthPage from './components/AuthPage';
 import { generateMonthlyStudyPlan } from './utils/slqfAlgorithm';
+import { getCurrentUser, logoutUser, getScopedStorage, bootstrapSession } from './utils/authStore';
 
 const INITIAL_MODULES = [
   { id: 'm-1', name: 'Data Structures & Algorithms', code: 'CS201', credits: 4, difficulty: 'hard', targetGrade: 'A_PLUS', color: '#6366f1' },
@@ -25,39 +27,66 @@ const INITIAL_FREE_TIME = {
 };
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(0); // 0 = Home Page
-  const [theme, setTheme] = useState(() => localStorage.getItem('slqf_theme') || 'dark');
+  // ── Auth state ──────────────────────────────────────────────────────────────
+  const [currentUser, setCurrentUser] = useState(null);
+  const [appReady, setAppReady] = useState(false);
+
+  // ── App state (all guarded by currentUser) ──────────────────────────────────
+  const [currentStep, setCurrentStep] = useState(0);
+  const [theme, setTheme] = useState('dark');
   const [slqfMultiplier, setSlqfMultiplier] = useState(2.5);
-
-  const [modules, setModules] = useState(() => {
-    const saved = localStorage.getItem('slqf_modules');
-    return saved ? JSON.parse(saved) : INITIAL_MODULES;
-  });
-
-  const [freeTimeByDay, setFreeTimeByDay] = useState(() => {
-    const saved = localStorage.getItem('slqf_free_time');
-    return saved ? JSON.parse(saved) : INITIAL_FREE_TIME;
-  });
-
+  const [modules, setModules] = useState(INITIAL_MODULES);
+  const [freeTimeByDay, setFreeTimeByDay] = useState(INITIAL_FREE_TIME);
   const [sessionLength, setSessionLength] = useState(50);
   const [planResult, setPlanResult] = useState(null);
 
-  // Sync Theme attribute on document root
+  // ── Bootstrap session on startup (handles Electron async session) ───────────
+  useEffect(() => {
+    bootstrapSession().then((user) => {
+      setCurrentUser(user || null);
+      setAppReady(true);
+    });
+  }, []);
+
+  // ── Load user-scoped data whenever currentUser changes ──────────────────────
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const store = getScopedStorage(currentUser.username);
+
+    Promise.all([
+      Promise.resolve(store.get('theme', null)),
+      Promise.resolve(store.get('modules', null)),
+      Promise.resolve(store.get('free_time', null)),
+    ]).then(([savedTheme, savedModules, savedFreeTime]) => {
+      setTheme(savedTheme || 'dark');
+      setModules(savedModules || INITIAL_MODULES);
+      setFreeTimeByDay(savedFreeTime || INITIAL_FREE_TIME);
+      setCurrentStep(0);
+    });
+  }, [currentUser]);
+
+  // ── Sync theme attribute ────────────────────────────────────────────────────
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('slqf_theme', theme);
-  }, [theme]);
+    if (currentUser) {
+      Promise.resolve(getScopedStorage(currentUser.username).set('theme', theme));
+    }
+  }, [theme, currentUser]);
 
-  // Persist State to LocalStorage
+  // ── Persist modules ─────────────────────────────────────────────────────────
   useEffect(() => {
-    localStorage.setItem('slqf_modules', JSON.stringify(modules));
-  }, [modules]);
+    if (!currentUser) return;
+    Promise.resolve(getScopedStorage(currentUser.username).set('modules', modules));
+  }, [modules, currentUser]);
 
+  // ── Persist free time ───────────────────────────────────────────────────────
   useEffect(() => {
-    localStorage.setItem('slqf_free_time', JSON.stringify(freeTimeByDay));
-  }, [freeTimeByDay]);
+    if (!currentUser) return;
+    Promise.resolve(getScopedStorage(currentUser.username).set('free_time', freeTimeByDay));
+  }, [freeTimeByDay, currentUser]);
 
-  // Generate / Update Monthly Study Plan
+  // ── Generate / Update Monthly Study Plan ───────────────────────────────────
   useEffect(() => {
     if (modules && modules.length > 0) {
       const result = generateMonthlyStudyPlan(modules, freeTimeByDay, slqfMultiplier, sessionLength);
@@ -65,23 +94,65 @@ export default function App() {
     }
   }, [modules, freeTimeByDay, slqfMultiplier, sessionLength]);
 
+  // ── Navigation ──────────────────────────────────────────────────────────────
   const goToStep = (stepNumber) => {
     setCurrentStep(stepNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // ── Reset (only clears the scoped user data) ──────────────────────────────────
   const handleResetData = () => {
-    if (window.confirm('Are you sure you want to reset all modules and free time entries?')) {
-      localStorage.clear();
-      setSlqfMultiplier(2.5);
-      setModules(INITIAL_MODULES);
-      setFreeTimeByDay(INITIAL_FREE_TIME);
-      setCurrentStep(0);
+    if (!window.confirm('Are you sure you want to reset all modules and free time entries?')) return;
+    if (currentUser) {
+      const store = getScopedStorage(currentUser.username);
+      Promise.all([
+        Promise.resolve(store.remove('modules')),
+        Promise.resolve(store.remove('free_time')),
+        Promise.resolve(store.remove('completed_tasks')),
+        Promise.resolve(store.remove('incomplete_tasks')),
+      ]);
     }
+    setSlqfMultiplier(2.5);
+    setModules(INITIAL_MODULES);
+    setFreeTimeByDay(INITIAL_FREE_TIME);
+    setCurrentStep(0);
+  };
+
+  // ── Auth handlers ───────────────────────────────────────────────────────────
+  const handleAuthSuccess = (user) => {
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    logoutUser();
+    setCurrentUser(null);
+    setModules(INITIAL_MODULES);
+    setFreeTimeByDay(INITIAL_FREE_TIME);
+    setPlanResult(null);
+    setCurrentStep(0);
+  };
+
+  const handleUpdateUser = (updatedUser) => {
+    setCurrentUser(updatedUser);
   };
 
   const totalSLQFHours = planResult ? planResult.totalSLQFRequiredHours : 0;
 
+  // ── Auth Gate ──────────────────────────────────────────────────────────────────
+  // Wait for session bootstrap before deciding to show auth or main app
+  if (!appReady) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-main)' }}>
+        <div style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Loading...</div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+  }
+
+  // ── Main App ────────────────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Top Navbar */}
@@ -92,6 +163,9 @@ export default function App() {
         setTheme={setTheme}
         onResetData={handleResetData}
         planResult={planResult}
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        onUpdateUser={handleUpdateUser}
       />
 
       {/* Main Container */}
@@ -130,6 +204,7 @@ export default function App() {
           <ScheduleView
             planResult={planResult}
             freeTimeByDay={freeTimeByDay}
+            currentUser={currentUser}
             onPrevStep={() => goToStep(2)}
             onNextStep={() => goToStep(4)}
           />
@@ -139,6 +214,7 @@ export default function App() {
         {currentStep === 4 && (
           <AnalyticsView
             planResult={planResult}
+            currentUser={currentUser}
             onPrevStep={() => goToStep(3)}
           />
         )}
