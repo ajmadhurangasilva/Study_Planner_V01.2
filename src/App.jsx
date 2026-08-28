@@ -170,9 +170,14 @@ export default function App() {
 
       {/* Main Container */}
       <main style={{ flex: 1, padding: '2.5rem 1.5rem', maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
-        {/* Step 0: Home Page */}
+        {/* Step 0: Home Page / My Task Dashboard */}
         {currentStep === 0 && (
-          <HomePage onStartPlanner={() => goToStep(1)} />
+          <HomePage
+            planResult={planResult}
+            currentUser={currentUser}
+            onStartPlanner={() => goToStep(1)}
+            onGoToStep={goToStep}
+          />
         )}
 
         {/* Step 1: Modules & Credit Values */}
