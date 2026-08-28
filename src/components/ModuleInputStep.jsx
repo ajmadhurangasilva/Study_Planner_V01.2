@@ -82,7 +82,7 @@ export default function ModuleInputStep({
           >
             {/* Module Name & Code */}
             <div>
-              <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>
+              <label className="sky-label">
                 Module Name & Code
               </label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -107,7 +107,7 @@ export default function ModuleInputStep({
 
             {/* Credit Count */}
             <div>
-              <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>
+              <label className="sky-label">
                 Credit Value
               </label>
               <select
@@ -125,7 +125,7 @@ export default function ModuleInputStep({
 
             {/* Difficulty Level */}
             <div>
-              <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>
+              <label className="sky-label">
                 Difficulty Rating
               </label>
               <select
@@ -141,7 +141,7 @@ export default function ModuleInputStep({
 
             {/* Target Grade */}
             <div>
-              <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>
+              <label className="sky-label">
                 Target Grade
               </label>
               <select

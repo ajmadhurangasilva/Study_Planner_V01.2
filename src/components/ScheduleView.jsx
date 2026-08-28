@@ -486,64 +486,60 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                             <div
                               key={session.id}
                               style={{
-                                background: isCompleted
-                                  ? 'rgba(16, 185, 129, 0.12)'
-                                  : isIncomplete
-                                  ? 'rgba(244, 63, 94, 0.12)'
-                                  : 'rgba(255, 255, 255, 0.03)',
-                                borderLeft: `4px solid ${
-                                  isCompleted ? '#10b981' : isIncomplete ? '#f43f5e' : session.color || 'var(--accent-primary)'
-                                }`,
-                                borderRadius: '8px',
-                                padding: '0.85rem',
+                                background: 'var(--bg-card)',
+                                borderRadius: '16px',
+                                border: '1.5px solid var(--border-color)',
+                                padding: '1rem',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: '0.45rem',
-                                transition: 'all 0.2s ease'
+                                gap: '0.65rem',
+                                boxShadow: 'var(--shadow-sm)',
+                                transition: 'all 0.2s ease',
+                                position: 'relative'
                               }}
                             >
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{
-                                  fontSize: '0.75rem',
-                                  fontWeight: 700,
-                                  color: isCompleted ? 'var(--accent-emerald)' : isIncomplete ? 'var(--accent-rose)' : session.color,
-                                  textDecoration: isCompleted ? 'line-through' : 'none'
-                                }}>
-                                  {session.moduleCode}
-                                </span>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                                  ⏰ {session.startTime} - {session.endTime}
-                                </span>
+                              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                  <div style={{
+                                    width: '38px', height: '38px', borderRadius: '12px',
+                                    background: isCompleted ? 'rgba(16, 185, 129, 0.12)' : isIncomplete ? 'rgba(244, 63, 94, 0.12)' : 'rgba(37, 99, 235, 0.1)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                                  }}>
+                                    {session.isCustom ? <Users size={18} color="#2563eb" /> : <BookOpen size={18} color={session.color || '#2563eb'} />}
+                                  </div>
+                                  <div>
+                                    <h4 style={{
+                                      fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0,
+                                      textDecoration: isCompleted ? 'line-through' : 'none'
+                                    }}>
+                                      {session.title || session.moduleName}
+                                    </h4>
+                                    <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', margin: 0 }}>
+                                      {session.description || `${session.moduleCode || 'SLQF'} • ${session.sessionLength || 50}m focus`}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="time-badge-dark" style={{ fontSize: '0.75rem', padding: '0.3rem 0.75rem' }}>
+                                  {session.startTime || session.timeDisplay || '10:00 AM'}
+                                </div>
                               </div>
 
-                              <div style={{
-                                fontSize: '0.92rem',
-                                fontWeight: 600,
-                                textDecoration: isCompleted ? 'line-through' : 'none'
-                              }}>
-                                {session.moduleName}
-                              </div>
-
-                              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                ⏱️ {session.sessionLength} min focus work
-                              </div>
-
-                              {/* Task Action Controls (Completed / Incomplete / Pending) */}
-                              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.25rem' }}>
+                              {/* Action Controls */}
+                              <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.15rem' }}>
                                 <button
                                   onClick={() => handleSetStatus(session.id, 'completed')}
                                   className={`btn ${isCompleted ? 'btn-primary' : 'btn-secondary'}`}
-                                  style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem', flex: 1 }}
+                                  style={{ padding: '0.3rem 0.6rem', fontSize: '0.74rem', flex: 1, borderRadius: '9999px' }}
                                 >
-                                  <CheckCircle2 size={13} /> Done
+                                  <CheckCircle2 size={12} /> {isCompleted ? 'Done' : 'Done'}
                                 </button>
-
                                 <button
                                   onClick={() => handleSetStatus(session.id, 'incomplete')}
                                   className={`btn ${isIncomplete ? 'btn-danger' : 'btn-secondary'}`}
-                                  style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem', flex: 1 }}
+                                  style={{ padding: '0.3rem 0.6rem', fontSize: '0.74rem', flex: 1, borderRadius: '9999px' }}
                                 >
-                                  <XCircle size={13} /> Missed
+                                  <XCircle size={12} /> {isIncomplete ? 'Missed' : 'Missed'}
                                 </button>
                               </div>
 
@@ -552,16 +548,16 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                                 <div style={{
                                   marginTop: '0.35rem',
                                   padding: '0.45rem 0.65rem',
-                                  background: 'rgba(244, 63, 94, 0.18)',
-                                  borderRadius: '6px',
+                                  background: 'rgba(244, 63, 94, 0.14)',
+                                  borderRadius: '10px',
                                   border: '1px solid rgba(244, 63, 94, 0.3)',
                                   fontSize: '0.73rem',
-                                  color: '#ffffff'
+                                  color: 'var(--text-primary)'
                                 }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 700, color: '#fda4af' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 700, color: '#f43f5e' }}>
                                     <RefreshCw size={12} /> Reschedule Suggestion:
                                   </div>
-                                  <div style={{ fontSize: '0.72rem', marginTop: '2px' }}>
+                                  <div style={{ fontSize: '0.72rem', marginTop: '2px', fontWeight: 600 }}>
                                     💡 {rescheduleSuggestion}
                                   </div>
                                 </div>
