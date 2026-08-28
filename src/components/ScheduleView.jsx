@@ -77,6 +77,8 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
 
   const { schedule, moduleAnalytics } = planResult;
 
+  const combinedSchedule = [...customTasks, ...schedule];
+
   const handleSetStatus = (taskId, status) => {
     if (status === 'completed') {
       setCompletedTaskIds((prev) => (prev.includes(taskId) ? prev : [...prev, taskId]));
@@ -92,10 +94,10 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
   };
 
   // Filter schedule by active week, day, and module
-  const filteredSchedule = schedule.filter((item) => {
-    const matchesWeek = activeWeek === 'ALL' || item.week === activeWeek;
+  const filteredSchedule = combinedSchedule.filter((item) => {
+    const matchesWeek = activeWeek === 'ALL' || item.week === activeWeek || item.isCustom;
     const matchesDay = selectedDay === 'ALL' || item.day === selectedDay;
-    const matchesModule = selectedModuleFilter === 'ALL' || item.moduleId === selectedModuleFilter;
+    const matchesModule = selectedModuleFilter === 'ALL' || item.moduleId === selectedModuleFilter || item.code === selectedModuleFilter;
     return matchesWeek && matchesDay && matchesModule;
   });
 
@@ -347,10 +349,17 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem' }} className="no-print">
+            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }} className="no-print">
+              <button
+                onClick={() => setShowCreateTaskModal(true)}
+                className="btn btn-primary"
+                style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
+              >
+                <Plus size={16} /> Create Task
+              </button>
               <button
                 onClick={() => exportToICalendar(filteredSchedule, `Week ${activeWeek} Plan`)}
-                className="btn btn-primary"
+                className="btn btn-secondary"
                 style={{ padding: '0.5rem 1rem', fontSize: '0.82rem' }}
               >
                 <Download size={15} /> Export iCal (.ics)
@@ -365,44 +374,59 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             </div>
           </div>
 
-          {/* Filter Controls (Day & Subject) */}
+          {/* Filter Controls: Horizontal Date Selector Capsule Bar & Subject Dropdown */}
           <div className="no-print" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '1rem',
-            marginBottom: '1.5rem'
+            gap: '1.2rem',
+            marginBottom: '1.75rem',
+            background: 'rgba(255, 255, 255, 0.4)',
+            padding: '1rem 1.25rem',
+            borderRadius: 'var(--radius-md)',
+            border: '1.5px solid var(--border-color)'
           }}>
-            {/* Day Filter Tabs */}
-            <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+            {/* Horizontal Date Selector Capsule Bar */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', overflowX: 'auto', paddingBottom: '0.15rem' }}>
               <button
                 onClick={() => setSelectedDay('ALL')}
-                className={`btn ${selectedDay === 'ALL' ? 'btn-primary' : 'btn-secondary'}`}
-                style={{ padding: '0.45rem 0.9rem', fontSize: '0.82rem', borderRadius: '20px' }}
+                className={`date-pill ${selectedDay === 'ALL' ? 'date-pill-active' : ''}`}
+                style={{ width: '64px' }}
               >
-                All 7 Days
+                <span className="date-pill-num" style={{ fontSize: '0.88rem' }}>ALL</span>
+                <span className="date-pill-day">Days</span>
               </button>
-              {DAYS_OF_WEEK.map((day) => (
+
+              {[
+                { day: 'Monday', num: '01', letter: 'M' },
+                { day: 'Tuesday', num: '02', letter: 'T' },
+                { day: 'Wednesday', num: '03', letter: 'W' },
+                { day: 'Thursday', num: '04', letter: 'T' },
+                { day: 'Friday', num: '05', letter: 'F' },
+                { day: 'Saturday', num: '06', letter: 'S' },
+                { day: 'Sunday', num: '07', letter: 'S' },
+              ].map(({ day, num, letter }) => (
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day)}
-                  className={`btn ${selectedDay === day ? 'btn-primary' : 'btn-secondary'}`}
-                  style={{ padding: '0.45rem 0.9rem', fontSize: '0.82rem', borderRadius: '20px' }}
+                  className={`date-pill ${selectedDay === day ? 'date-pill-active' : ''}`}
+                  title={day}
                 >
-                  {day.slice(0, 3)}
+                  <span className="date-pill-num">{num}</span>
+                  <span className="date-pill-day">{letter}</span>
                 </button>
               ))}
             </div>
 
             {/* Module Filter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Filter size={16} color="var(--text-muted)" />
+              <Filter size={16} color="var(--text-sky)" />
               <select
                 value={selectedModuleFilter}
                 onChange={(e) => setSelectedModuleFilter(e.target.value)}
                 className="input-field"
-                style={{ width: '220px', padding: '0.45rem 0.75rem', fontSize: '0.82rem' }}
+                style={{ width: '210px', padding: '0.45rem 0.75rem', fontSize: '0.82rem', borderRadius: '9999px' }}
               >
                 <option value="ALL">All Subjects</option>
                 {moduleAnalytics.map((m) => (
@@ -675,6 +699,14 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             </button>
           </div>
         </div>
+      )}
+
+      {/* Create New Task Modal */}
+      {showCreateTaskModal && (
+        <CreateTaskModal
+          onAddTask={(task) => setCustomTasks((prev) => [task, ...prev])}
+          onClose={() => setShowCreateTaskModal(false)}
+        />
       )}
     </div>
   );
