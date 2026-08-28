@@ -5,13 +5,13 @@ import { registerUser, loginUser } from '../utils/authStore';
 // ─── Reusable Input Field ────────────────────────────────────────────────────
 function AuthInput({ id, label, type = 'text', value, onChange, placeholder, icon: Icon, rightElement }) {
   return (
-    <div style={{ marginBottom: '1.1rem' }}>
-      <label htmlFor={id} style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.4rem', letterSpacing: '0.03em' }}>
+    <div style={{ marginBottom: '1.15rem' }}>
+      <label htmlFor={id} style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', letterSpacing: '0.02em' }}>
         {label}
       </label>
       <div style={{ position: 'relative' }}>
         {Icon && (
-          <span style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none', display: 'flex' }}>
+          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none', display: 'flex' }}>
             <Icon size={16} />
           </span>
         )}
@@ -23,10 +23,10 @@ function AuthInput({ id, label, type = 'text', value, onChange, placeholder, ico
           placeholder={placeholder}
           className="input-field"
           autoComplete="off"
-          style={{ paddingLeft: Icon ? '2.5rem' : '1rem', paddingRight: rightElement ? '2.8rem' : '1rem' }}
+          style={{ paddingLeft: Icon ? '2.75rem' : '1.1rem', paddingRight: rightElement ? '2.8rem' : '1.1rem', borderRadius: 'var(--radius-sm)' }}
         />
         {rightElement && (
-          <span style={{ position: 'absolute', right: '0.9rem', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex' }}>
+          <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex' }}>
             {rightElement}
           </span>
         )}
@@ -102,72 +102,72 @@ export default function AuthPage({ onAuthSuccess }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '1.5rem',
+      padding: '2rem 1.5rem',
       position: 'relative',
       overflow: 'hidden',
+      background: 'var(--bg-main)'
     }}>
-      {/* Animated gradient blobs */}
+      {/* Background Soft Blue Glow Elements */}
       <div style={{
-        position: 'fixed', top: '-20%', left: '-10%',
-        width: '60vw', height: '60vw', maxWidth: '700px', maxHeight: '700px',
+        position: 'fixed', top: '-15%', left: '-10%',
+        width: '50vw', height: '50vw', maxWidth: '600px', maxHeight: '600px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%)',
-        animation: 'blobFloat 8s ease-in-out infinite',
+        background: 'radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
       <div style={{
-        position: 'fixed', bottom: '-20%', right: '-10%',
-        width: '55vw', height: '55vw', maxWidth: '650px', maxHeight: '650px',
+        position: 'fixed', bottom: '-15%', right: '-10%',
+        width: '50vw', height: '50vw', maxWidth: '600px', maxHeight: '600px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%)',
-        animation: 'blobFloat 10s ease-in-out infinite reverse',
+        background: 'radial-gradient(circle, rgba(2,132,199,0.1) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
       <div style={{ width: '100%', maxWidth: '460px', position: 'relative', zIndex: 1 }}>
         {/* Logo + App Name */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2.25rem' }}>
           <div style={{
-            width: '64px', height: '64px', borderRadius: '20px',
-            background: 'var(--gradient-main)',
+            width: '56px', height: '56px', borderRadius: '18px',
+            background: 'var(--accent-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 1rem',
-            boxShadow: '0 8px 24px rgba(37,99,235,0.35)',
+            boxShadow: '0 8px 24px rgba(37,99,235,0.3)',
           }}>
-            <BookOpen size={30} color="#fff" />
+            <BookOpen size={28} color="#fff" />
           </div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.25rem', color: 'var(--text-primary)' }}>Study Planner</h1>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-            Time Allocation System
+          <h1 style={{ fontSize: '2.1rem', fontWeight: 800, marginBottom: '0.25rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+            Study Planner
+          </h1>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+            Smart Time Allocation System
           </p>
         </div>
 
-        {/* Auth Card */}
+        {/* Auth Card (Floating White Surface) */}
         <div className="glass-card" style={{
-          padding: '2.2rem',
-          border: '1.5px solid var(--border-color)',
-          boxShadow: 'var(--shadow-md)',
-          borderRadius: 'var(--radius-lg)'
+          padding: '2.4rem',
+          boxShadow: 'var(--shadow-lg)',
+          borderRadius: 'var(--radius-xl)'
         }}>
-          {/* Tab Switcher */}
+          {/* Tab Switcher Capsule */}
           <div style={{
             display: 'flex', gap: '0.3rem',
-            background: 'var(--bg-input)', borderRadius: '9999px',
-            padding: '0.3rem', marginBottom: '1.8rem',
-            border: '1.5px solid var(--border-color)',
+            background: 'var(--bg-input)', borderRadius: 'var(--radius-pill)',
+            padding: '0.35rem', marginBottom: '1.8rem',
+            border: '1px solid var(--border-color)',
           }}>
             {['login', 'register'].map((t) => (
               <button
                 key={t}
                 onClick={() => switchTab(t)}
                 style={{
-                  flex: 1, padding: '0.55rem',
-                  borderRadius: '8px', border: 'none', cursor: 'pointer',
-                  fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '0.9rem',
+                  flex: 1, padding: '0.6rem',
+                  borderRadius: 'var(--radius-pill)', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '0.9rem',
                   transition: 'all 0.2s',
-                  background: tab === t ? 'var(--gradient-main)' : 'transparent',
+                  background: tab === t ? 'var(--accent-primary)' : 'transparent',
                   color: tab === t ? '#fff' : 'var(--text-secondary)',
-                  boxShadow: tab === t ? '0 2px 12px rgba(99,102,241,0.35)' : 'none',
+                  boxShadow: tab === t ? '0 4px 14px rgba(37,99,235,0.3)' : 'none',
                 }}
               >
                 {t === 'login' ? 'Sign In' : 'Create Account'}
@@ -203,9 +203,9 @@ export default function AuthPage({ onAuthSuccess }) {
 
               {error && (
                 <div style={{
-                  padding: '0.7rem 0.9rem', borderRadius: '8px', marginBottom: '1rem',
-                  background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)',
-                  color: '#f87171', fontSize: '0.83rem',
+                  padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem',
+                  background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.25)',
+                  color: 'var(--accent-rose)', fontSize: '0.85rem', fontWeight: 600
                 }}>
                   ⚠️ {error}
                 </div>
@@ -216,14 +216,14 @@ export default function AuthPage({ onAuthSuccess }) {
                 className="btn btn-primary"
                 id="login-submit-btn"
                 disabled={loading}
-                style={{ width: '100%', padding: '0.85rem', fontSize: '1rem', marginTop: '0.25rem' }}
+                style={{ width: '100%', padding: '0.9rem', fontSize: '1rem', marginTop: '0.5rem' }}
               >
                 {loading ? <><Loader size={16} style={{ animation: 'spin 1s linear infinite' }} /> Signing in…</> : <>Sign In <ArrowRight size={16} /></>}
               </button>
 
-              <p style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '1.2rem' }}>
+              <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '1.35rem', fontWeight: 500 }}>
                 Don't have an account?{' '}
-                <span onClick={() => switchTab('register')} style={{ color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: 600 }}>
+                <span onClick={() => switchTab('register')} style={{ color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: 700 }}>
                   Create one free
                 </span>
               </p>
@@ -321,9 +321,9 @@ export default function AuthPage({ onAuthSuccess }) {
 
               {error && (
                 <div style={{
-                  padding: '0.7rem 0.9rem', borderRadius: '8px', marginBottom: '1rem',
-                  background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)',
-                  color: '#f87171', fontSize: '0.83rem',
+                  padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem',
+                  background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.25)',
+                  color: 'var(--accent-rose)', fontSize: '0.85rem', fontWeight: 600
                 }}>
                   ⚠️ {error}
                 </div>
@@ -334,14 +334,14 @@ export default function AuthPage({ onAuthSuccess }) {
                 className="btn btn-primary"
                 id="register-submit-btn"
                 disabled={loading}
-                style={{ width: '100%', padding: '0.85rem', fontSize: '1rem' }}
+                style={{ width: '100%', padding: '0.9rem', fontSize: '1rem' }}
               >
                 {loading ? <><Loader size={16} style={{ animation: 'spin 1s linear infinite' }} /> Creating account…</> : <>Create Account <ArrowRight size={16} /></>}
               </button>
 
-              <p style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '1.2rem' }}>
+              <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '1.35rem', fontWeight: 500 }}>
                 Already have an account?{' '}
-                <span onClick={() => switchTab('login')} style={{ color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: 600 }}>
+                <span onClick={() => switchTab('login')} style={{ color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: 700 }}>
                   Sign in
                 </span>
               </p>
@@ -350,17 +350,12 @@ export default function AuthPage({ onAuthSuccess }) {
         </div>
 
         {/* Privacy note */}
-        <p style={{ textAlign: 'center', fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '1.25rem', lineHeight: 1.5 }}>
-          🔒 All data stays on this device. Nothing is sent to any server.
+        <p style={{ textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '1.5rem', lineHeight: 1.5, fontWeight: 500 }}>
+          🔒 Offline Scoped Storage. All data remains secure on your device.
         </p>
       </div>
 
-      {/* Keyframe animations injected inline */}
       <style>{`
-        @keyframes blobFloat {
-          0%, 100% { transform: translateY(0px) scale(1); }
-          50% { transform: translateY(-30px) scale(1.04); }
-        }
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }

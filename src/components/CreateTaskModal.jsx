@@ -57,7 +57,7 @@ export default function CreateTaskModal({ onAddTask, onClose }) {
         }}
       />
 
-      {/* Form Container Modal */}
+      {/* Form Container Modal (Direct Match to Reference Design) */}
       <div
         className="animate-fade-in"
         style={{
@@ -65,20 +65,20 @@ export default function CreateTaskModal({ onAddTask, onClose }) {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '90%',
+          width: '92%',
           maxWidth: '460px',
           background: 'var(--bg-card)',
-          borderRadius: 'var(--radius-lg)',
-          border: '1.5px solid var(--border-color)',
+          borderRadius: 'var(--radius-xl)',
+          border: '1px solid var(--border-color)',
           boxShadow: 'var(--shadow-lg)',
           zIndex: 400,
-          padding: '2rem 2.2rem',
+          padding: '2.2rem 2.4rem',
           maxHeight: '90vh',
           overflowY: 'auto'
         }}
       >
-        {/* Top Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.8rem' }}>
+        {/* Top Header matching reference */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
           <button
             onClick={onClose}
             style={{
@@ -86,40 +86,42 @@ export default function CreateTaskModal({ onAddTask, onClose }) {
               color: 'var(--text-primary)', display: 'flex', alignItems: 'center', padding: '0.2rem'
             }}
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={26} />
           </button>
 
-          <h2 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
             Create New Task
           </h2>
 
           <div style={{
-            width: '40px', height: '40px', borderRadius: '12px',
-            background: 'rgba(37, 99, 235, 0.1)', display: 'flex',
+            width: '42px', height: '42px', borderRadius: '14px',
+            background: 'var(--accent-light-blue)', display: 'flex',
             alignItems: 'center', justifyContent: 'center'
           }}>
-            <ClipboardList size={22} color="#2563eb" />
+            <ClipboardList size={22} color="var(--accent-primary)" />
           </div>
         </div>
 
         <form onSubmit={handleSubmit}>
           {/* Task Name */}
-          <div style={{ marginBottom: '1.4rem' }}>
+          <div style={{ marginBottom: '1.6rem' }}>
             <label className="sky-label">Task Name</label>
             <input
               type="text"
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
               placeholder="e.g. Team Meeting"
-              className="input-field"
               style={{
-                fontSize: '1.05rem',
+                width: '100%',
+                fontSize: '1.1rem',
                 fontWeight: 700,
                 border: 'none',
                 borderBottom: '2px solid var(--border-color)',
                 borderRadius: 0,
-                padding: '0.4rem 0',
-                background: 'transparent'
+                padding: '0.5rem 0',
+                background: 'transparent',
+                color: 'var(--text-primary)',
+                outline: 'none'
               }}
               required
               autoFocus
@@ -127,12 +129,12 @@ export default function CreateTaskModal({ onAddTask, onClose }) {
           </div>
 
           {/* Select Category */}
-          <div style={{ marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+          <div style={{ marginBottom: '1.75rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
               <label className="sky-label" style={{ margin: 0 }}>Select Category</label>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', cursor: 'pointer' }}>See all</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', cursor: 'pointer', fontWeight: 600 }}>See all</span>
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap' }}>
               {CATEGORIES.map((cat) => (
                 <button
                   type="button"
@@ -147,37 +149,53 @@ export default function CreateTaskModal({ onAddTask, onClose }) {
           </div>
 
           {/* Date */}
-          <div style={{ marginBottom: '1.4rem' }}>
+          <div style={{ marginBottom: '1.6rem' }}>
             <label className="sky-label">Date</label>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.4rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.5rem' }}>
               <input
                 type="text"
                 value={dateStr}
                 onChange={(e) => setDateStr(e.target.value)}
-                className="input-field"
                 style={{
-                  fontSize: '1rem',
+                  width: '100%',
+                  fontSize: '1.05rem',
                   fontWeight: 700,
                   border: 'none',
                   background: 'transparent',
+                  color: 'var(--text-primary)',
+                  outline: 'none',
                   padding: 0
                 }}
               />
-              <Calendar size={20} color="#2563eb" />
+              <div style={{
+                width: '36px', height: '36px', borderRadius: '10px',
+                background: 'var(--accent-light-blue)', display: 'flex',
+                alignItems: 'center', justifyContent: 'center', flexShrink: 0
+              }}>
+                <Calendar size={18} color="var(--accent-primary)" />
+              </div>
             </div>
           </div>
 
           {/* Start Time & End Time */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.75rem' }}>
             <div>
               <label className="sky-label">Start time</label>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.4rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.5rem' }}>
                 <input
                   type="text"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="input-field"
-                  style={{ fontSize: '0.95rem', fontWeight: 700, border: 'none', background: 'transparent', padding: 0 }}
+                  style={{
+                    width: '100%',
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    border: 'none',
+                    background: 'transparent',
+                    color: 'var(--text-primary)',
+                    outline: 'none',
+                    padding: 0
+                  }}
                 />
                 <Clock size={16} color="var(--text-muted)" />
               </div>
@@ -185,13 +203,21 @@ export default function CreateTaskModal({ onAddTask, onClose }) {
 
             <div>
               <label className="sky-label">End time</label>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.4rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.5rem' }}>
                 <input
                   type="text"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="input-field"
-                  style={{ fontSize: '0.95rem', fontWeight: 700, border: 'none', background: 'transparent', padding: 0 }}
+                  style={{
+                    width: '100%',
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    border: 'none',
+                    background: 'transparent',
+                    color: 'var(--text-primary)',
+                    outline: 'none',
+                    padding: 0
+                  }}
                 />
                 <Clock size={16} color="var(--text-muted)" />
               </div>
@@ -199,36 +225,37 @@ export default function CreateTaskModal({ onAddTask, onClose }) {
           </div>
 
           {/* Description */}
-          <div style={{ marginBottom: '2rem' }}>
+          <div style={{ marginBottom: '2.25rem' }}>
             <label className="sky-label">Description</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Discuss all questions about new projects"
-              className="input-field"
               style={{
-                fontSize: '0.92rem',
+                width: '100%',
+                fontSize: '0.95rem',
                 fontWeight: 500,
                 border: 'none',
                 borderBottom: '2px solid var(--border-color)',
                 borderRadius: 0,
-                padding: '0.4rem 0',
-                background: 'transparent'
+                padding: '0.5rem 0',
+                background: 'transparent',
+                color: 'var(--text-primary)',
+                outline: 'none'
               }}
             />
           </div>
 
-          {/* Action Button */}
+          {/* Action Button (Reference Pill CTA Button) */}
           <button
             type="submit"
             className="btn btn-primary"
             style={{
               width: '100%',
-              padding: '0.95rem',
+              padding: '1rem',
               fontSize: '1.05rem',
-              fontWeight: 800,
-              borderRadius: '9999px'
+              fontWeight: 800
             }}
           >
             Create Task

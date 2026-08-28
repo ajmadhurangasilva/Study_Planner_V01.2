@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DAYS_OF_WEEK } from '../utils/slqfPresets';
 import { getRescheduleSuggestion } from '../utils/slqfAlgorithm';
-import { Calendar, Download, Printer, Filter, ArrowLeft, ArrowRight, AlertTriangle, CheckCircle2, XCircle, Trophy, RefreshCw, ChevronRight, BarChart2, Plus, Users, PhoneCall, Mail, BookOpen } from 'lucide-react';
+import { Calendar, Download, Printer, Filter, ArrowLeft, ArrowRight, AlertTriangle, CheckCircle2, XCircle, Trophy, RefreshCw, ChevronRight, BarChart2, Plus, Users, BookOpen } from 'lucide-react';
 import { exportToICalendar, printSchedule } from '../utils/exportUtils';
 import confetti from 'canvas-confetti';
 import { getScopedStorage } from '../utils/authStore';
@@ -64,11 +64,11 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
     return (
       <div className="glass-card" style={{ padding: '3rem', textAlign: 'center', maxWidth: '600px', margin: '3rem auto' }}>
         <AlertTriangle size={48} color="var(--accent-amber)" style={{ marginBottom: '1rem' }} />
-        <h3>No Study Schedule Generated Yet</h3>
+        <h3 style={{ fontSize: '1.4rem', fontWeight: 800 }}>No Study Schedule Generated Yet</h3>
         <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
           Please complete your modules and free time entries to generate your monthly study plan.
         </p>
-        <button onClick={onPrevStep} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+        <button onClick={onPrevStep} className="btn btn-primary" style={{ marginTop: '1.25rem' }}>
           <ArrowLeft size={16} /> Go Back
         </button>
       </div>
@@ -97,7 +97,7 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
   const filteredSchedule = combinedSchedule.filter((item) => {
     const matchesWeek = activeWeek === 'ALL' || item.week === activeWeek || item.isCustom;
     const matchesDay = selectedDay === 'ALL' || item.day === selectedDay;
-    const matchesModule = selectedModuleFilter === 'ALL' || item.moduleId === selectedModuleFilter || item.code === selectedModuleFilter;
+    const matchesModule = selectedModuleFilter === 'ALL' || item.moduleId === selectedModuleFilter || item.code === selectedModuleFilter || item.category === selectedModuleFilter;
     return matchesWeek && matchesDay && matchesModule;
   });
 
@@ -129,10 +129,10 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '3rem' }}>
-      {/* Title */}
-      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Monthly Study Plan & Timetable</h2>
-        <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+      {/* Title Header */}
+      <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.4rem' }}>Monthly Study Plan & Timetable</h2>
+        <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
           {activeWeek ? `Showing Timetable for Week ${activeWeek}` : 'Select a Week to view its 7-day study timetable.'}
         </p>
       </div>
@@ -141,8 +141,8 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
       {activeWeek === null ? (
         <div>
           {/* Week-by-Week Individual Progress Breakdown Grid */}
-          <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ marginBottom: '2.5rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <BarChart2 size={20} color="var(--accent-primary)" /> Week-by-Week Progress Breakdown
             </h3>
 
@@ -157,10 +157,9 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                   onClick={() => setActiveWeek(st.week)}
                   className="glass-card"
                   style={{
-                    padding: '1.35rem',
+                    padding: '1.5rem',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    border: '1px solid var(--border-color)',
+                    transition: 'all 0.25s ease',
                     position: 'relative'
                   }}
                   onMouseOver={(e) => {
@@ -172,8 +171,8 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                     e.currentTarget.style.transform = 'none';
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <span className="badge badge-indigo" style={{ fontSize: '0.85rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                    <span className="badge badge-indigo" style={{ fontSize: '0.85rem', fontWeight: 700 }}>
                       📅 Week {st.week}
                     </span>
                     <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--accent-emerald)' }}>
@@ -181,18 +180,18 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                     </span>
                   </div>
 
-                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '0.85rem', fontWeight: 500 }}>
                     {st.done} of {st.total} Sessions ({st.doneHours} / {st.totalHours} hrs)
                   </div>
 
-                  {/* Individual Week Progress Bar */}
+                  {/* Progress Bar */}
                   <div style={{
                     width: '100%',
                     height: '8px',
-                    background: 'rgba(255, 255, 255, 0.08)',
+                    background: 'var(--bg-input)',
                     borderRadius: '4px',
                     overflow: 'hidden',
-                    marginBottom: '1rem'
+                    marginBottom: '1.1rem'
                   }}>
                     <div style={{
                       width: `${st.pct}%`,
@@ -202,7 +201,7 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                     }} />
                   </div>
 
-                  <button className="btn btn-secondary" style={{ width: '100%', padding: '0.55rem', fontSize: '0.82rem' }}>
+                  <button className="btn btn-secondary" style={{ width: '100%', padding: '0.6rem', fontSize: '0.85rem', borderRadius: 'var(--radius-pill)' }}>
                     View Week {st.week} Timetable <ChevronRight size={16} />
                   </button>
                 </div>
@@ -212,11 +211,10 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
 
           {/* FINAL OVERALL MONTHLY PROGRESS SUMMARY CARD */}
           <div className="glass-card" style={{
-            padding: '2rem',
+            padding: '2.2rem',
             marginBottom: '2.5rem',
-            border: '2px solid var(--border-glow)',
-            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(16, 185, 129, 0.12) 100%)',
-            boxShadow: 'var(--shadow-glow)'
+            background: 'linear-gradient(135deg, #ffffff 0%, #edf5ff 100%)',
+            boxShadow: 'var(--shadow-md)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -224,17 +222,17 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                   width: '52px',
                   height: '52px',
                   borderRadius: '16px',
-                  background: 'var(--gradient-emerald)',
+                  background: 'var(--accent-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: 'var(--shadow-glow)'
+                  boxShadow: '0 6px 18px rgba(37, 99, 235, 0.3)'
                 }}>
-                  <Trophy size={30} color="#ffffff" />
+                  <Trophy size={28} color="#ffffff" />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.4rem', margin: 0 }}>Final Overall Monthly Progress Summary</h3>
-                  <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0' }}>
+                  <h3 style={{ fontSize: '1.35rem', margin: 0, fontWeight: 800 }}>Overall Monthly Progress Summary</h3>
+                  <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0', fontWeight: 500 }}>
                     Total Monthly Performance across all 4 weeks
                   </p>
                 </div>
@@ -244,31 +242,31 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                 <div style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--accent-emerald)', lineHeight: 1 }}>
                   {monthProgressPercent}%
                 </div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '4px', fontWeight: 600 }}>
                   {monthCompletedCount} / {monthTotalCount} Total Sessions Completed
                 </div>
               </div>
             </div>
 
-            {/* Overall Monthly Progress Bar */}
+            {/* Overall Progress Bar */}
             <div style={{
               width: '100%',
-              height: '14px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              borderRadius: '7px',
+              height: '12px',
+              background: 'var(--bg-input)',
+              borderRadius: '6px',
               overflow: 'hidden',
-              marginBottom: '1rem'
+              marginBottom: '1.1rem'
             }}>
               <div style={{
                 width: `${monthProgressPercent}%`,
                 height: '100%',
                 background: 'var(--gradient-emerald)',
-                borderRadius: '7px',
+                borderRadius: '6px',
                 transition: 'width 0.6s ease-in-out'
               }} />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', fontSize: '0.88rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
               <span>⏱️ Total Monthly Hours Studied: <strong style={{ color: 'var(--text-primary)' }}>{monthCompletedHours} / {monthTotalHours} Hours</strong></span>
               <span>🔥 Monthly Pace Rating: <strong style={{ color: 'var(--accent-emerald)' }}>{monthProgressPercent >= 75 ? 'Excellent' : monthProgressPercent >= 50 ? 'Steady Progress' : 'Needs Focus'}</strong></span>
             </div>
@@ -281,10 +279,9 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '1rem',
-            borderColor: 'var(--border-glow)'
+            gap: '1rem'
           }}>
-            <button onClick={onPrevStep} className="btn btn-secondary" style={{ padding: '0.85rem 1.5rem' }}>
+            <button onClick={onPrevStep} className="btn btn-secondary" style={{ padding: '0.85rem 1.6rem' }}>
               <ArrowLeft size={18} /> Previous
             </button>
 
@@ -308,7 +305,7 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             <button
               onClick={() => setActiveWeek(null)}
               className="btn btn-secondary"
-              style={{ padding: '0.55rem 1.1rem', fontSize: '0.88rem' }}
+              style={{ padding: '0.55rem 1.2rem', fontSize: '0.88rem' }}
             >
               <ArrowLeft size={16} /> ← Back to All Weeks Overview
             </button>
@@ -320,7 +317,7 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                   key={wk}
                   onClick={() => setActiveWeek(wk)}
                   className={`btn ${activeWeek === wk ? 'btn-primary' : 'btn-secondary'}`}
-                  style={{ padding: '0.45rem 0.9rem', fontSize: '0.82rem', borderRadius: '12px' }}
+                  style={{ padding: '0.55rem 1.1rem', fontSize: '0.85rem' }}
                 >
                   Week {wk}
                 </button>
@@ -330,7 +327,7 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
 
           {/* Active Week Progress Bar Card */}
           <div className="glass-card" style={{
-            padding: '1.25rem 1.5rem',
+            padding: '1.35rem 1.6rem',
             marginBottom: '1.5rem',
             borderLeft: '5px solid var(--accent-primary)',
             display: 'flex',
@@ -340,34 +337,34 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             gap: '1rem'
           }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Calendar size={20} color="var(--accent-primary)" />
                 Week {activeWeek} Timetable Schedule
               </h3>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '0.25rem 0 0' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.25rem 0 0', fontWeight: 500 }}>
                 Week {activeWeek} Progress: {activeWeekStat.done} of {activeWeekStat.total} Sessions Completed ({activeWeekStat.pct}%)
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }} className="no-print">
+            <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }} className="no-print">
               <button
                 onClick={() => setShowCreateTaskModal(true)}
                 className="btn btn-primary"
-                style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
+                style={{ padding: '0.6rem 1.2rem', fontSize: '0.88rem' }}
               >
-                <Plus size={16} /> Create Task
+                <Plus size={18} /> Create Task
               </button>
               <button
                 onClick={() => exportToICalendar(filteredSchedule, `Week ${activeWeek} Plan`)}
                 className="btn btn-secondary"
-                style={{ padding: '0.5rem 1rem', fontSize: '0.82rem' }}
+                style={{ padding: '0.6rem 1.1rem', fontSize: '0.85rem' }}
               >
                 <Download size={15} /> Export iCal (.ics)
               </button>
               <button
                 onClick={printSchedule}
                 className="btn btn-secondary"
-                style={{ padding: '0.5rem 1rem', fontSize: '0.82rem' }}
+                style={{ padding: '0.6rem 1.1rem', fontSize: '0.85rem' }}
               >
                 <Printer size={15} /> Print
               </button>
@@ -375,26 +372,23 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
           </div>
 
           {/* Filter Controls: Horizontal Date Selector Capsule Bar & Subject Dropdown */}
-          <div className="no-print" style={{
+          <div className="no-print glass-card" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '1.2rem',
-            marginBottom: '1.75rem',
-            background: 'rgba(255, 255, 255, 0.4)',
-            padding: '1rem 1.25rem',
-            borderRadius: 'var(--radius-md)',
-            border: '1.5px solid var(--border-color)'
+            marginBottom: '2rem',
+            padding: '1.1rem 1.35rem'
           }}>
-            {/* Horizontal Date Selector Capsule Bar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', overflowX: 'auto', paddingBottom: '0.15rem' }}>
+            {/* Horizontal Date Selector Capsule Bar (Exact Reference Design Concept) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', overflowX: 'auto', paddingBottom: '0.15rem' }}>
               <button
                 onClick={() => setSelectedDay('ALL')}
                 className={`date-pill ${selectedDay === 'ALL' ? 'date-pill-active' : ''}`}
-                style={{ width: '64px' }}
+                style={{ width: '68px' }}
               >
-                <span className="date-pill-num" style={{ fontSize: '0.88rem' }}>ALL</span>
+                <span className="date-pill-num" style={{ fontSize: '0.9rem' }}>ALL</span>
                 <span className="date-pill-day">Days</span>
               </button>
 
@@ -420,15 +414,15 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             </div>
 
             {/* Module Filter */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Filter size={16} color="var(--text-sky)" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              <Filter size={16} color="var(--accent-primary)" />
               <select
                 value={selectedModuleFilter}
                 onChange={(e) => setSelectedModuleFilter(e.target.value)}
                 className="input-field"
-                style={{ width: '210px', padding: '0.45rem 0.75rem', fontSize: '0.82rem', borderRadius: '9999px' }}
+                style={{ width: '220px', padding: '0.5rem 0.85rem', fontSize: '0.85rem', borderRadius: 'var(--radius-pill)', fontWeight: 600 }}
               >
-                <option value="ALL">All Subjects</option>
+                <option value="ALL">All Categories & Subjects</option>
                 {moduleAnalytics.map((m) => (
                   <option key={m.id || m.code} value={m.id || m.code || m.name}>
                     {m.code} - {m.name}
@@ -442,8 +436,8 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
           {selectedDay === 'ALL' ? (
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '1.25rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
+              gap: '1.35rem',
               marginBottom: '2.5rem'
             }}>
               {DAYS_OF_WEEK.map((day) => {
@@ -451,34 +445,33 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                 const dayCompletedCount = daySessions.filter((s) => completedTaskIds.includes(s.id)).length;
 
                 return (
-                  <div key={day} className="glass-card" style={{ padding: '1.25rem' }}>
+                  <div key={day} className="glass-card" style={{ padding: '1.35rem' }}>
                     {/* Day Header */}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      marginBottom: '1rem',
-                      paddingBottom: '0.5rem',
+                      marginBottom: '1.1rem',
+                      paddingBottom: '0.65rem',
                       borderBottom: '1px solid var(--border-color)'
                     }}>
-                      <h3 style={{ fontSize: '1.05rem', fontWeight: 700 }}>{day}</h3>
-                      <span className={`badge ${dayCompletedCount === daySessions.length && daySessions.length > 0 ? 'badge-emerald' : 'badge-indigo'}`} style={{ fontSize: '0.75rem' }}>
+                      <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>{day}</h3>
+                      <span className={`badge ${dayCompletedCount === daySessions.length && daySessions.length > 0 ? 'badge-emerald' : 'badge-indigo'}`} style={{ fontSize: '0.78rem' }}>
                         {dayCompletedCount}/{daySessions.length} Completed
                       </span>
                     </div>
 
                     {/* Session Cards for the Day */}
                     {daySessions.length === 0 ? (
-                      <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic', padding: '1rem 0' }}>
-                        ☕ Free Rest Day (No scheduled self-study blocks)
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic', padding: '1.25rem 0', textAlign: 'center' }}>
+                        ☕ Rest Day (No scheduled self-study blocks)
                       </p>
                     ) : (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem' }}>
                         {daySessions.map((session) => {
                           const isCompleted = completedTaskIds.includes(session.id);
                           const isIncomplete = incompleteTaskIds.includes(session.id);
                           
-                          // Calculate unique missed index for non-overlapping reschedule suggestion!
                           const missedIdx = Math.max(0, incompleteTaskIds.indexOf(session.id));
                           const rescheduleSuggestion = isIncomplete ? getRescheduleSuggestion(session, missedIdx) : null;
 
@@ -487,59 +480,66 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                               key={session.id}
                               style={{
                                 background: 'var(--bg-card)',
-                                borderRadius: '16px',
+                                borderRadius: 'var(--radius-md)',
                                 border: '1.5px solid var(--border-color)',
-                                padding: '1rem',
+                                padding: '1.15rem 1.25rem',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: '0.65rem',
-                                boxShadow: 'var(--shadow-sm)',
+                                gap: '0.75rem',
+                                boxShadow: 'var(--shadow-card)',
                                 transition: 'all 0.2s ease',
                                 position: 'relative'
                               }}
                             >
+                              {/* Top Bar: Icon + Title + Category Pill + Dark Time Badge (Reference Inspired) */}
                               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                                   <div style={{
-                                    width: '38px', height: '38px', borderRadius: '12px',
-                                    background: isCompleted ? 'rgba(16, 185, 129, 0.12)' : isIncomplete ? 'rgba(244, 63, 94, 0.12)' : 'rgba(37, 99, 235, 0.1)',
+                                    width: '40px', height: '40px', borderRadius: '14px',
+                                    background: isCompleted ? 'rgba(16, 185, 129, 0.12)' : isIncomplete ? 'rgba(244, 63, 94, 0.12)' : 'var(--accent-light-blue)',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
                                   }}>
-                                    {session.isCustom ? <Users size={18} color="#2563eb" /> : <BookOpen size={18} color={session.color || '#2563eb'} />}
+                                    {session.isCustom ? <Users size={18} color="var(--accent-primary)" /> : <BookOpen size={18} color={session.color || 'var(--accent-primary)'} />}
                                   </div>
                                   <div>
+                                    <div style={{ display: 'inline-block', marginBottom: '0.2rem' }}>
+                                      <span className="badge badge-indigo" style={{ fontSize: '0.72rem', padding: '0.2rem 0.65rem' }}>
+                                        {session.category || session.moduleCode || 'Study'}
+                                      </span>
+                                    </div>
                                     <h4 style={{
-                                      fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0,
-                                      textDecoration: isCompleted ? 'line-through' : 'none'
+                                      fontSize: '0.98rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0,
+                                      textDecoration: isCompleted ? 'line-through' : 'none',
+                                      lineHeight: 1.3
                                     }}>
                                       {session.title || session.moduleName}
                                     </h4>
-                                    <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', margin: 0 }}>
+                                    <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '0.2rem 0 0', fontWeight: 500 }}>
                                       {session.description || `${session.moduleCode || 'SLQF'} • ${session.sessionLength || 50}m focus`}
                                     </p>
                                   </div>
                                 </div>
 
-                                <div className="time-badge-dark" style={{ fontSize: '0.75rem', padding: '0.3rem 0.75rem' }}>
+                                <div className="time-badge-dark" style={{ flexShrink: 0 }}>
                                   {session.startTime || session.timeDisplay || '10:00 AM'}
                                 </div>
                               </div>
 
                               {/* Action Controls */}
-                              <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.15rem' }}>
+                              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.2rem' }}>
                                 <button
                                   onClick={() => handleSetStatus(session.id, 'completed')}
                                   className={`btn ${isCompleted ? 'btn-primary' : 'btn-secondary'}`}
-                                  style={{ padding: '0.3rem 0.6rem', fontSize: '0.74rem', flex: 1, borderRadius: '9999px' }}
+                                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.78rem', flex: 1, borderRadius: 'var(--radius-pill)' }}
                                 >
-                                  <CheckCircle2 size={12} /> {isCompleted ? 'Done' : 'Done'}
+                                  <CheckCircle2 size={13} /> {isCompleted ? 'Done' : 'Mark Done'}
                                 </button>
                                 <button
                                   onClick={() => handleSetStatus(session.id, 'incomplete')}
                                   className={`btn ${isIncomplete ? 'btn-danger' : 'btn-secondary'}`}
-                                  style={{ padding: '0.3rem 0.6rem', fontSize: '0.74rem', flex: 1, borderRadius: '9999px' }}
+                                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.78rem', flex: 1, borderRadius: 'var(--radius-pill)' }}
                                 >
-                                  <XCircle size={12} /> {isIncomplete ? 'Missed' : 'Missed'}
+                                  <XCircle size={13} /> {isIncomplete ? 'Missed' : 'Missed'}
                                 </button>
                               </div>
 
@@ -547,17 +547,17 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                               {isIncomplete && (
                                 <div style={{
                                   marginTop: '0.35rem',
-                                  padding: '0.45rem 0.65rem',
-                                  background: 'rgba(244, 63, 94, 0.14)',
-                                  borderRadius: '10px',
-                                  border: '1px solid rgba(244, 63, 94, 0.3)',
-                                  fontSize: '0.73rem',
+                                  padding: '0.55rem 0.75rem',
+                                  background: 'rgba(244, 63, 94, 0.08)',
+                                  borderRadius: 'var(--radius-sm)',
+                                  border: '1px solid rgba(244, 63, 94, 0.25)',
+                                  fontSize: '0.76rem',
                                   color: 'var(--text-primary)'
                                 }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 700, color: '#f43f5e' }}>
-                                    <RefreshCw size={12} /> Reschedule Suggestion:
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 700, color: 'var(--accent-rose)' }}>
+                                    <RefreshCw size={13} /> Reschedule Suggestion:
                                   </div>
-                                  <div style={{ fontSize: '0.72rem', marginTop: '2px', fontWeight: 600 }}>
+                                  <div style={{ fontSize: '0.74rem', marginTop: '2px', fontWeight: 600 }}>
                                     💡 {rescheduleSuggestion}
                                   </div>
                                 </div>
@@ -573,16 +573,18 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             </div>
           ) : (
             /* Single Day View */
-            <div className="glass-card" style={{ padding: '2rem', maxWidth: '700px', margin: '0 auto 2.5rem' }}>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="glass-card" style={{ padding: '2rem', maxWidth: '720px', margin: '0 auto 2.5rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Calendar size={20} color="var(--accent-primary)" /> {selectedDay} (Week {activeWeek})
               </h3>
 
               {filteredSchedule.length === 0 ? (
-                <p style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>No study blocks scheduled for this day.</p>
+                <p style={{ color: 'var(--text-muted)', fontStyle: 'italic', textAlign: 'center', padding: '1.5rem 0' }}>
+                  No study blocks scheduled for this day.
+                </p>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {filteredSchedule.map((session, idx) => {
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+                  {filteredSchedule.map((session) => {
                     const isCompleted = completedTaskIds.includes(session.id);
                     const isIncomplete = incompleteTaskIds.includes(session.id);
                     
@@ -592,43 +594,37 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                     return (
                       <div
                         key={session.id}
+                        className="glass-card"
                         style={{
-                          background: isCompleted
-                            ? 'rgba(16, 185, 129, 0.12)'
-                            : isIncomplete
-                            ? 'rgba(244, 63, 94, 0.12)'
-                            : 'rgba(255, 255, 255, 0.04)',
-                          borderLeft: `5px solid ${
-                            isCompleted ? '#10b981' : isIncomplete ? '#f43f5e' : session.color || 'var(--accent-primary)'
-                          }`,
-                          borderRadius: '12px',
-                          padding: '1.25rem',
+                          padding: '1.35rem 1.5rem',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '0.5rem'
+                          gap: '0.75rem',
+                          borderLeft: `5px solid ${
+                            isCompleted ? 'var(--accent-emerald)' : isIncomplete ? 'var(--accent-rose)' : session.color || 'var(--accent-primary)'
+                          }`
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                           <div>
-                            <span className="badge" style={{ background: `${session.color}22`, color: session.color }}>
-                              {session.moduleCode} • {session.credits} Credits
+                            <span className="badge badge-indigo">
+                              {session.category || session.moduleCode} • {session.credits || 3} Credits
                             </span>
                             <h4 style={{
-                              fontSize: '1.1rem',
-                              marginTop: '0.25rem',
+                              fontSize: '1.15rem',
+                              fontWeight: 800,
+                              marginTop: '0.4rem',
                               textDecoration: isCompleted ? 'line-through' : 'none'
                             }}>
-                              {session.moduleName}
+                              {session.title || session.moduleName}
                             </h4>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0' }}>
+                              {session.description || `${session.moduleCode} Focus Session`}
+                            </p>
                           </div>
 
-                          <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--accent-primary)' }}>
-                              {session.startTime}
-                            </div>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                              to {session.endTime}
-                            </div>
+                          <div className="time-badge-dark">
+                            {session.startTime || session.timeDisplay || '10:00 AM'}
                           </div>
                         </div>
 
@@ -637,7 +633,7 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                           <button
                             onClick={() => handleSetStatus(session.id, 'completed')}
                             className={`btn ${isCompleted ? 'btn-primary' : 'btn-secondary'}`}
-                            style={{ padding: '0.45rem 1rem', fontSize: '0.82rem', flex: 1 }}
+                            style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem', flex: 1 }}
                           >
                             <CheckCircle2 size={16} /> Mark Completed
                           </button>
@@ -645,7 +641,7 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                           <button
                             onClick={() => handleSetStatus(session.id, 'incomplete')}
                             className={`btn ${isIncomplete ? 'btn-danger' : 'btn-secondary'}`}
-                            style={{ padding: '0.45rem 1rem', fontSize: '0.82rem', flex: 1 }}
+                            style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem', flex: 1 }}
                           >
                             <XCircle size={16} /> Mark Incomplete
                           </button>
@@ -656,14 +652,14 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                           <div style={{
                             marginTop: '0.5rem',
                             padding: '0.75rem 1rem',
-                            background: 'rgba(244, 63, 94, 0.18)',
-                            borderRadius: '8px',
-                            border: '1px solid rgba(244, 63, 94, 0.3)'
+                            background: 'rgba(244, 63, 94, 0.08)',
+                            borderRadius: 'var(--radius-sm)',
+                            border: '1px solid rgba(244, 63, 94, 0.25)'
                           }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, color: '#fda4af' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, color: 'var(--accent-rose)' }}>
                               <RefreshCw size={15} /> Suggested Reschedule Slot:
                             </div>
-                            <div style={{ fontSize: '0.88rem', marginTop: '3px', fontWeight: 600 }}>
+                            <div style={{ fontSize: '0.85rem', marginTop: '3px', fontWeight: 600 }}>
                               💡 {rescheduleSuggestion}
                             </div>
                           </div>
@@ -683,10 +679,9 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '1rem',
-            borderColor: 'var(--border-glow)'
+            gap: '1rem'
           }}>
-            <button onClick={() => setActiveWeek(null)} className="btn btn-secondary" style={{ padding: '0.85rem 1.5rem' }}>
+            <button onClick={() => setActiveWeek(null)} className="btn btn-secondary" style={{ padding: '0.85rem 1.6rem' }}>
               <ArrowLeft size={18} /> ← Back to Overview
             </button>
 

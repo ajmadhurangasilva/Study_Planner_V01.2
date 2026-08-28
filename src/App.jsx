@@ -169,7 +169,7 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main style={{ flex: 1, padding: '2rem 1.5rem', maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+      <main style={{ flex: 1, padding: '2.5rem 1.5rem', maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
         {/* Step 0: Home Page */}
         {currentStep === 0 && (
           <HomePage onStartPlanner={() => goToStep(1)} />
@@ -223,13 +223,14 @@ export default function App() {
       {/* Footer */}
       <footer className="no-print" style={{
         textAlign: 'center',
-        padding: '1.5rem',
+        padding: '1.75rem 1.5rem',
         borderTop: '1px solid var(--border-color)',
         fontSize: '0.85rem',
         color: 'var(--text-muted)',
-        background: 'var(--bg-main)'
+        background: 'var(--bg-main)',
+        fontWeight: 500
       }}>
-        🇱🇰 Study Time Allocation System • Built for Student Success
+        Study Time Allocation System • Built for Student Success
       </footer>
     </div>
   );
