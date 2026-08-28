@@ -33,7 +33,7 @@ export default function App() {
 
   // ── App state (all guarded by currentUser) ──────────────────────────────────
   const [currentStep, setCurrentStep] = useState(0);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('dark');
   const [slqfMultiplier, setSlqfMultiplier] = useState(2.5);
   const [modules, setModules] = useState(INITIAL_MODULES);
   const [freeTimeByDay, setFreeTimeByDay] = useState(INITIAL_FREE_TIME);
@@ -59,7 +59,7 @@ export default function App() {
       Promise.resolve(store.get('modules', null)),
       Promise.resolve(store.get('free_time', null)),
     ]).then(([savedTheme, savedModules, savedFreeTime]) => {
-      setTheme(savedTheme || 'light');
+      setTheme(savedTheme || 'dark');
       setModules(savedModules || INITIAL_MODULES);
       setFreeTimeByDay(savedFreeTime || INITIAL_FREE_TIME);
       setCurrentStep(0);

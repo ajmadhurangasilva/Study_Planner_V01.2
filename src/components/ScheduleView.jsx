@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { DAYS_OF_WEEK } from '../utils/slqfPresets';
 import { getRescheduleSuggestion } from '../utils/slqfAlgorithm';
-import { Calendar, Download, Printer, Filter, ArrowLeft, ArrowRight, AlertTriangle, CheckCircle2, XCircle, Trophy, RefreshCw, ChevronRight, BarChart2, Plus, Users, PhoneCall, Mail, BookOpen } from 'lucide-react';
+import { Calendar, Download, Printer, Filter, ArrowLeft, ArrowRight, AlertTriangle, CheckCircle2, XCircle, Trophy, RefreshCw, ChevronRight, BarChart2 } from 'lucide-react';
 import { exportToICalendar, printSchedule } from '../utils/exportUtils';
 import confetti from 'canvas-confetti';
 import { getScopedStorage } from '../utils/authStore';
-import CreateTaskModal from './CreateTaskModal';
 
 export default function ScheduleView({ planResult, freeTimeByDay, currentUser, onPrevStep, onNextStep }) {
   const [activeWeek, setActiveWeek] = useState(null); 
   const [selectedDay, setSelectedDay] = useState('ALL');
   const [selectedModuleFilter, setSelectedModuleFilter] = useState('ALL');
-  const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
-  const [customTasks, setCustomTasks] = useState([]);
 
   // Per-user scoped storage helper
   const [isLoaded, setIsLoaded] = useState(false);
@@ -77,8 +74,6 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
 
   const { schedule, moduleAnalytics } = planResult;
 
-  const combinedSchedule = [...customTasks, ...schedule];
-
   const handleSetStatus = (taskId, status) => {
     if (status === 'completed') {
       setCompletedTaskIds((prev) => (prev.includes(taskId) ? prev : [...prev, taskId]));
@@ -94,10 +89,10 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
   };
 
   // Filter schedule by active week, day, and module
-  const filteredSchedule = combinedSchedule.filter((item) => {
-    const matchesWeek = activeWeek === 'ALL' || item.week === activeWeek || item.isCustom;
+  const filteredSchedule = schedule.filter((item) => {
+    const matchesWeek = activeWeek === 'ALL' || item.week === activeWeek;
     const matchesDay = selectedDay === 'ALL' || item.day === selectedDay;
-    const matchesModule = selectedModuleFilter === 'ALL' || item.moduleId === selectedModuleFilter || item.code === selectedModuleFilter;
+    const matchesModule = selectedModuleFilter === 'ALL' || item.moduleId === selectedModuleFilter;
     return matchesWeek && matchesDay && matchesModule;
   });
 
@@ -349,17 +344,10 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }} className="no-print">
-              <button
-                onClick={() => setShowCreateTaskModal(true)}
-                className="btn btn-primary"
-                style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
-              >
-                <Plus size={16} /> Create Task
-              </button>
+            <div style={{ display: 'flex', gap: '0.75rem' }} className="no-print">
               <button
                 onClick={() => exportToICalendar(filteredSchedule, `Week ${activeWeek} Plan`)}
-                className="btn btn-secondary"
+                className="btn btn-primary"
                 style={{ padding: '0.5rem 1rem', fontSize: '0.82rem' }}
               >
                 <Download size={15} /> Export iCal (.ics)
@@ -374,59 +362,44 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             </div>
           </div>
 
-          {/* Filter Controls: Horizontal Date Selector Capsule Bar & Subject Dropdown */}
+          {/* Filter Controls (Day & Subject) */}
           <div className="no-print" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '1.2rem',
-            marginBottom: '1.75rem',
-            background: 'rgba(255, 255, 255, 0.4)',
-            padding: '1rem 1.25rem',
-            borderRadius: 'var(--radius-md)',
-            border: '1.5px solid var(--border-color)'
+            gap: '1rem',
+            marginBottom: '1.5rem'
           }}>
-            {/* Horizontal Date Selector Capsule Bar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', overflowX: 'auto', paddingBottom: '0.15rem' }}>
+            {/* Day Filter Tabs */}
+            <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
               <button
                 onClick={() => setSelectedDay('ALL')}
-                className={`date-pill ${selectedDay === 'ALL' ? 'date-pill-active' : ''}`}
-                style={{ width: '64px' }}
+                className={`btn ${selectedDay === 'ALL' ? 'btn-primary' : 'btn-secondary'}`}
+                style={{ padding: '0.45rem 0.9rem', fontSize: '0.82rem', borderRadius: '20px' }}
               >
-                <span className="date-pill-num" style={{ fontSize: '0.88rem' }}>ALL</span>
-                <span className="date-pill-day">Days</span>
+                All 7 Days
               </button>
-
-              {[
-                { day: 'Monday', num: '01', letter: 'M' },
-                { day: 'Tuesday', num: '02', letter: 'T' },
-                { day: 'Wednesday', num: '03', letter: 'W' },
-                { day: 'Thursday', num: '04', letter: 'T' },
-                { day: 'Friday', num: '05', letter: 'F' },
-                { day: 'Saturday', num: '06', letter: 'S' },
-                { day: 'Sunday', num: '07', letter: 'S' },
-              ].map(({ day, num, letter }) => (
+              {DAYS_OF_WEEK.map((day) => (
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day)}
-                  className={`date-pill ${selectedDay === day ? 'date-pill-active' : ''}`}
-                  title={day}
+                  className={`btn ${selectedDay === day ? 'btn-primary' : 'btn-secondary'}`}
+                  style={{ padding: '0.45rem 0.9rem', fontSize: '0.82rem', borderRadius: '20px' }}
                 >
-                  <span className="date-pill-num">{num}</span>
-                  <span className="date-pill-day">{letter}</span>
+                  {day.slice(0, 3)}
                 </button>
               ))}
             </div>
 
             {/* Module Filter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Filter size={16} color="var(--text-sky)" />
+              <Filter size={16} color="var(--text-muted)" />
               <select
                 value={selectedModuleFilter}
                 onChange={(e) => setSelectedModuleFilter(e.target.value)}
                 className="input-field"
-                style={{ width: '210px', padding: '0.45rem 0.75rem', fontSize: '0.82rem', borderRadius: '9999px' }}
+                style={{ width: '220px', padding: '0.45rem 0.75rem', fontSize: '0.82rem' }}
               >
                 <option value="ALL">All Subjects</option>
                 {moduleAnalytics.map((m) => (
@@ -486,60 +459,64 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                             <div
                               key={session.id}
                               style={{
-                                background: 'var(--bg-card)',
-                                borderRadius: '16px',
-                                border: '1.5px solid var(--border-color)',
-                                padding: '1rem',
+                                background: isCompleted
+                                  ? 'rgba(16, 185, 129, 0.12)'
+                                  : isIncomplete
+                                  ? 'rgba(244, 63, 94, 0.12)'
+                                  : 'rgba(255, 255, 255, 0.03)',
+                                borderLeft: `4px solid ${
+                                  isCompleted ? '#10b981' : isIncomplete ? '#f43f5e' : session.color || 'var(--accent-primary)'
+                                }`,
+                                borderRadius: '8px',
+                                padding: '0.85rem',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: '0.65rem',
-                                boxShadow: 'var(--shadow-sm)',
-                                transition: 'all 0.2s ease',
-                                position: 'relative'
+                                gap: '0.45rem',
+                                transition: 'all 0.2s ease'
                               }}
                             >
-                              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                                  <div style={{
-                                    width: '38px', height: '38px', borderRadius: '12px',
-                                    background: isCompleted ? 'rgba(16, 185, 129, 0.12)' : isIncomplete ? 'rgba(244, 63, 94, 0.12)' : 'rgba(37, 99, 235, 0.1)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
-                                  }}>
-                                    {session.isCustom ? <Users size={18} color="#2563eb" /> : <BookOpen size={18} color={session.color || '#2563eb'} />}
-                                  </div>
-                                  <div>
-                                    <h4 style={{
-                                      fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0,
-                                      textDecoration: isCompleted ? 'line-through' : 'none'
-                                    }}>
-                                      {session.title || session.moduleName}
-                                    </h4>
-                                    <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', margin: 0 }}>
-                                      {session.description || `${session.moduleCode || 'SLQF'} • ${session.sessionLength || 50}m focus`}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                <div className="time-badge-dark" style={{ fontSize: '0.75rem', padding: '0.3rem 0.75rem' }}>
-                                  {session.startTime || session.timeDisplay || '10:00 AM'}
-                                </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{
+                                  fontSize: '0.75rem',
+                                  fontWeight: 700,
+                                  color: isCompleted ? 'var(--accent-emerald)' : isIncomplete ? 'var(--accent-rose)' : session.color,
+                                  textDecoration: isCompleted ? 'line-through' : 'none'
+                                }}>
+                                  {session.moduleCode}
+                                </span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                  ⏰ {session.startTime} - {session.endTime}
+                                </span>
                               </div>
 
-                              {/* Action Controls */}
-                              <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.15rem' }}>
+                              <div style={{
+                                fontSize: '0.92rem',
+                                fontWeight: 600,
+                                textDecoration: isCompleted ? 'line-through' : 'none'
+                              }}>
+                                {session.moduleName}
+                              </div>
+
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                ⏱️ {session.sessionLength} min focus work
+                              </div>
+
+                              {/* Task Action Controls (Completed / Incomplete / Pending) */}
+                              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.25rem' }}>
                                 <button
                                   onClick={() => handleSetStatus(session.id, 'completed')}
                                   className={`btn ${isCompleted ? 'btn-primary' : 'btn-secondary'}`}
-                                  style={{ padding: '0.3rem 0.6rem', fontSize: '0.74rem', flex: 1, borderRadius: '9999px' }}
+                                  style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem', flex: 1 }}
                                 >
-                                  <CheckCircle2 size={12} /> {isCompleted ? 'Done' : 'Done'}
+                                  <CheckCircle2 size={13} /> Done
                                 </button>
+
                                 <button
                                   onClick={() => handleSetStatus(session.id, 'incomplete')}
                                   className={`btn ${isIncomplete ? 'btn-danger' : 'btn-secondary'}`}
-                                  style={{ padding: '0.3rem 0.6rem', fontSize: '0.74rem', flex: 1, borderRadius: '9999px' }}
+                                  style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem', flex: 1 }}
                                 >
-                                  <XCircle size={12} /> {isIncomplete ? 'Missed' : 'Missed'}
+                                  <XCircle size={13} /> Missed
                                 </button>
                               </div>
 
@@ -548,16 +525,16 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
                                 <div style={{
                                   marginTop: '0.35rem',
                                   padding: '0.45rem 0.65rem',
-                                  background: 'rgba(244, 63, 94, 0.14)',
-                                  borderRadius: '10px',
+                                  background: 'rgba(244, 63, 94, 0.18)',
+                                  borderRadius: '6px',
                                   border: '1px solid rgba(244, 63, 94, 0.3)',
                                   fontSize: '0.73rem',
-                                  color: 'var(--text-primary)'
+                                  color: '#ffffff'
                                 }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 700, color: '#f43f5e' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 700, color: '#fda4af' }}>
                                     <RefreshCw size={12} /> Reschedule Suggestion:
                                   </div>
-                                  <div style={{ fontSize: '0.72rem', marginTop: '2px', fontWeight: 600 }}>
+                                  <div style={{ fontSize: '0.72rem', marginTop: '2px' }}>
                                     💡 {rescheduleSuggestion}
                                   </div>
                                 </div>
@@ -695,14 +672,6 @@ export default function ScheduleView({ planResult, freeTimeByDay, currentUser, o
             </button>
           </div>
         </div>
-      )}
-
-      {/* Create New Task Modal */}
-      {showCreateTaskModal && (
-        <CreateTaskModal
-          onAddTask={(task) => setCustomTasks((prev) => [task, ...prev])}
-          onClose={() => setShowCreateTaskModal(false)}
-        />
       )}
     </div>
   );

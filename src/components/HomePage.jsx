@@ -6,21 +6,24 @@ export default function HomePage({ onStartPlanner }) {
     <div className="animate-fade-in" style={{ maxWidth: '1150px', margin: '0 auto', paddingBottom: '4rem' }}>
       {/* HERO BANNER SECTION */}
       <div className="glass-card" style={{
-        padding: '3.5rem 2.2rem',
+        padding: '3.5rem 2rem',
         textAlign: 'center',
         marginBottom: '3rem',
         position: 'relative',
         overflow: 'hidden',
-        border: '1.5px solid var(--border-color)',
-        background: 'linear-gradient(135deg, rgba(237, 245, 255, 0.9) 0%, rgba(224, 242, 254, 0.9) 100%)',
-        boxShadow: 'var(--shadow-md)',
-        borderRadius: 'var(--radius-lg)'
+        border: '1px solid var(--border-glow)',
+        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.12) 100%)',
+        boxShadow: 'var(--shadow-glow)'
       }}>
-        <h1 style={{ fontSize: '2.8rem', fontWeight: 800, marginBottom: '1rem', lineHeight: 1.25, letterSpacing: '-1px', color: 'var(--text-primary)' }}>
-          Master Your Semester with <span style={{ color: 'var(--accent-primary)' }}>Smart Study Time Allocation</span>
+        <h1 style={{ fontSize: '2.8rem', fontWeight: 800, marginBottom: '1rem', lineHeight: 1.25, letterSpacing: '-1px' }}>
+          Master Your Semester with <span style={{
+            background: 'var(--gradient-main)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>Smart Study Time Allocation</span>
         </h1>
 
-        <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', maxWidth: '750px', margin: '0 auto 2.25rem', lineHeight: 1.6, fontWeight: 500 }}>
+        <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', maxWidth: '750px', margin: '0 auto 2.25rem', lineHeight: 1.6 }}>
           Input your module credit load and daily available free time. Our smart allocation engine generates a custom 4-week study plan, tracks your week-by-week progress, and suggests instant catch-up slots for missed tasks.
         </p>
 
@@ -29,7 +32,7 @@ export default function HomePage({ onStartPlanner }) {
           <button
             onClick={onStartPlanner}
             className="btn btn-primary"
-            style={{ padding: '0.95rem 2.5rem', fontSize: '1.1rem', borderRadius: '9999px' }}
+            style={{ padding: '0.95rem 2.5rem', fontSize: '1.1rem', borderRadius: '30px' }}
           >
             Create Your Study Plan <ArrowRight size={20} />
           </button>

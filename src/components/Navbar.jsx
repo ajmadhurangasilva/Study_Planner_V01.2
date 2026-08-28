@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { BookOpen, Home, Calendar, Clock, BarChart3, Sun, Moon, Download, RotateCcw, User, LogOut, Bell, Check } from 'lucide-react';
+import { BookOpen, Home, Calendar, Clock, BarChart3, Sun, Moon, Download, RotateCcw, User, LogOut } from 'lucide-react';
 import { exportToICalendar, printSchedule, exportPlanJSON } from '../utils/exportUtils';
 import ProfileModal from './ProfileModal';
 
 export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, onResetData, planResult, currentUser, onLogout, onUpdateUser }) {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
 
   const avatarInitials = currentUser
     ? (currentUser.profile?.fullName || currentUser.username || 'U')
@@ -21,11 +20,10 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        background: 'var(--bg-card)',
-        borderBottom: '1.5px solid var(--border-color)',
+        background: 'var(--bg-main)',
+        borderBottom: '1px solid var(--border-color)',
         backdropFilter: 'blur(16px)',
-        padding: '0.85rem 1.75rem',
-        boxShadow: 'var(--shadow-sm)'
+        padding: '0.85rem 1.5rem'
       }} className="no-print">
         <div style={{
           maxWidth: '1280px',
@@ -39,20 +37,20 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
           {/* Logo & Title */}
           <div
             onClick={() => setCurrentStep(0)}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
           >
             <div style={{
-              width: '44px', height: '44px', borderRadius: '14px',
+              width: '42px', height: '42px', borderRadius: '12px',
               background: 'var(--gradient-main)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 6px 18px rgba(37, 99, 235, 0.35)'
+              boxShadow: 'var(--shadow-glow)'
             }}>
-              <BookOpen size={24} color="#ffffff" />
+              <BookOpen size={22} color="#ffffff" />
             </div>
             <div>
-              <h1 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>Study Planner</h1>
-              <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', margin: 0, fontWeight: 600 }}>
-                Time Allocation System
+              <h1 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0 }}>Study Planner</h1>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Study Time Allocation System
               </p>
             </div>
           </div>
@@ -62,16 +60,16 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
             display: 'flex',
             alignItems: 'center',
             gap: '0.35rem',
-            background: 'var(--bg-input)',
-            padding: '0.35rem',
-            borderRadius: '9999px',
-            border: '1.5px solid var(--border-color)',
+            background: 'rgba(255, 255, 255, 0.03)',
+            padding: '0.3rem',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border-color)',
             flexWrap: 'wrap'
           }}>
             <button
               onClick={() => setCurrentStep(0)}
               className={`btn ${currentStep === 0 ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+              style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
               id="nav-home-btn"
             >
               <Home size={15} /> Home
@@ -80,7 +78,7 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
             <button
               onClick={() => setCurrentStep(1)}
               className={`btn ${currentStep === 1 ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+              style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
               id="nav-modules-btn"
             >
               <BookOpen size={15} /> 1. Modules
@@ -89,7 +87,7 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
             <button
               onClick={() => setCurrentStep(2)}
               className={`btn ${currentStep === 2 ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+              style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
               id="nav-freetime-btn"
             >
               <Clock size={15} /> 2. Free Time
@@ -98,7 +96,7 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
             <button
               onClick={() => setCurrentStep(3)}
               className={`btn ${currentStep === 3 ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+              style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
               id="nav-schedule-btn"
             >
               <Calendar size={15} /> 3. Monthly Plan
@@ -107,7 +105,7 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
             <button
               onClick={() => setCurrentStep(4)}
               className={`btn ${currentStep === 4 ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+              style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
               id="nav-analytics-btn"
             >
               <BarChart3 size={15} /> 4. Analytics
@@ -115,55 +113,16 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
           </nav>
 
           {/* Action Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            {/* Notification Bell Dropdown (Inspired by Reference Design) */}
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="btn btn-secondary"
-                title="Notifications"
-                style={{ padding: '0.65rem', borderRadius: '50%', position: 'relative' }}
-              >
-                <Bell size={18} color="#2563eb" />
-                <span style={{
-                  position: 'absolute', top: '4px', right: '4px',
-                  width: '9px', height: '9px', borderRadius: '50%',
-                  background: '#f43f5e', border: '2px solid #fff'
-                }} />
-              </button>
-
-              {showNotifications && (
-                <div style={{
-                  position: 'absolute', top: '115%', right: 0, width: '280px',
-                  background: 'var(--bg-card)', border: '1.5px solid var(--border-color)',
-                  borderRadius: 'var(--radius-md)', padding: '1rem',
-                  boxShadow: 'var(--shadow-lg)', zIndex: 200
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <h4 style={{ fontSize: '0.9rem', fontWeight: 800, margin: 0 }}>Notifications</h4>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--accent-primary)', fontWeight: 600 }}>Mark read</span>
-                  </div>
-                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                    <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(37,99,235,0.06)' }}>
-                      📌 <strong>Study Reminder:</strong> CS201 Algorithms block scheduled for today.
-                    </div>
-                    <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(16,185,129,0.06)' }}>
-                      🎉 <strong>SLQF Target:</strong> Monthly workload plan successfully computed.
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {/* Theme Toggle */}
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="btn btn-secondary"
               title="Toggle Light/Dark Theme"
               id="theme-toggle-btn"
-              style={{ padding: '0.65rem', borderRadius: '50%' }}
+              style={{ padding: '0.6rem', borderRadius: '10px' }}
             >
-              {theme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#2563eb" />}
+              {theme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#6366f1" />}
             </button>
 
             {/* Export Menu Dropdown */}

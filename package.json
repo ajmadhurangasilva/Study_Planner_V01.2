@@ -55,7 +55,8 @@
           "target": "nsis",
           "arch": ["x64"]
         }
-      ]
+      ],
+      "icon": "public/favicon.ico"
     },
     "nsis": {
       "oneClick": false,
@@ -63,6 +64,7 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Study Planner",
+      "installerHeader": "public/favicon.ico",
       "uninstallDisplayName": "Study Planner"
     }
   }
