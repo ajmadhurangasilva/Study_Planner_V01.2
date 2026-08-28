@@ -1,6 +1,6 @@
 import React from 'react';
 import { DIFFICULTY_FACTORS, TARGET_GRADE_FACTORS } from '../utils/slqfPresets';
-import { Plus, Trash2, ArrowRight, ArrowLeft, BookOpen } from 'lucide-react';
+import { Plus, Trash2, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function ModuleInputStep({
   modules,
@@ -49,43 +49,42 @@ export default function ModuleInputStep({
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '3rem' }}>
-      {/* Title Header */}
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>Modules & Credit Values</h2>
-        <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+      {/* Title */}
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Modules & Credit Values</h2>
+        <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
           Specify your semester subjects, credit values, difficulty levels, and target grades.
         </p>
       </div>
 
       {/* Module Controls Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <BookOpen size={20} color="var(--accent-primary)" />
-          Semester Subjects List
-        </h3>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <h3 style={{ fontSize: '1.2rem' }}>Semester Subjects List</h3>
 
-        <button onClick={handleAddModule} className="btn btn-primary" style={{ padding: '0.65rem 1.4rem', fontSize: '0.88rem' }}>
+        <button onClick={handleAddModule} className="btn btn-primary" style={{ padding: '0.6rem 1.2rem', fontSize: '0.88rem' }}>
           <Plus size={16} /> Add New Module
         </button>
       </div>
 
       {/* Module List Cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem', marginBottom: '2.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2.5rem' }}>
         {modules.map((mod, index) => (
           <div
             key={mod.id || index}
             className="glass-card"
             style={{
-              padding: '1.35rem 1.5rem',
+              padding: '1.25rem',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr)) 45px',
-              gap: '1.2rem',
+              gap: '1rem',
               alignItems: 'center'
             }}
           >
             {/* Module Name & Code */}
             <div>
-              <label className="sky-label">Module Name & Code</label>
+              <label className="sky-label">
+                Module Name & Code
+              </label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <input
                   type="text"
@@ -101,19 +100,20 @@ export default function ModuleInputStep({
                   onChange={(e) => handleChangeModule(mod.id, 'code', e.target.value)}
                   placeholder="IT2010"
                   className="input-field"
-                  style={{ width: '90px', textTransform: 'uppercase', textAlign: 'center', fontWeight: 700 }}
+                  style={{ width: '90px', textTransform: 'uppercase', textAlign: 'center' }}
                 />
               </div>
             </div>
 
             {/* Credit Count */}
             <div>
-              <label className="sky-label">Credit Value</label>
+              <label className="sky-label">
+                Credit Value
+              </label>
               <select
                 value={mod.credits}
                 onChange={(e) => handleChangeModule(mod.id, 'credits', parseFloat(e.target.value))}
                 className="input-field"
-                style={{ fontWeight: 600 }}
               >
                 <option value={1}>1 Credit (50h total)</option>
                 <option value={2}>2 Credits (100h total)</option>
@@ -125,12 +125,13 @@ export default function ModuleInputStep({
 
             {/* Difficulty Level */}
             <div>
-              <label className="sky-label">Difficulty Rating</label>
+              <label className="sky-label">
+                Difficulty Rating
+              </label>
               <select
                 value={mod.difficulty}
                 onChange={(e) => handleChangeModule(mod.id, 'difficulty', e.target.value)}
                 className="input-field"
-                style={{ fontWeight: 600 }}
               >
                 {Object.entries(DIFFICULTY_FACTORS).map(([key, item]) => (
                   <option key={key} value={key}>{item.label}</option>
@@ -140,12 +141,13 @@ export default function ModuleInputStep({
 
             {/* Target Grade */}
             <div>
-              <label className="sky-label">Target Grade</label>
+              <label className="sky-label">
+                Target Grade
+              </label>
               <select
                 value={mod.targetGrade || 'A'}
                 onChange={(e) => handleChangeModule(mod.id, 'targetGrade', e.target.value)}
                 className="input-field"
-                style={{ fontWeight: 600 }}
               >
                 {Object.entries(TARGET_GRADE_FACTORS).map(([key, item]) => (
                   <option key={key} value={key}>{item.label}</option>
@@ -158,7 +160,7 @@ export default function ModuleInputStep({
               <button
                 onClick={() => handleRemoveModule(mod.id)}
                 className="btn btn-danger"
-                style={{ padding: '0.65rem', borderRadius: '12px' }}
+                style={{ padding: '0.65rem', borderRadius: '10px' }}
                 title="Remove Module"
               >
                 <Trash2 size={18} />
@@ -168,31 +170,32 @@ export default function ModuleInputStep({
         ))}
       </div>
 
-      {/* Summary Navigation Footer */}
+      {/* Summary Navigation Footer (Buttons on left/right edges, stats centered in middle) */}
       <div className="glass-card" style={{
         padding: '1.25rem 2rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '1.5rem'
+        gap: '1.5rem',
+        borderColor: 'var(--border-glow)'
       }}>
         {/* Left: Previous Button */}
-        <button onClick={onPrevStep} className="btn btn-secondary" style={{ padding: '0.85rem 1.6rem' }}>
+        <button onClick={onPrevStep} className="btn btn-secondary" style={{ padding: '0.85rem 1.5rem' }}>
           <ArrowLeft size={18} /> Previous
         </button>
 
         {/* Center: Stats Summary */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', margin: '0 auto' }}>
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Total Semester Credits</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Total Semester Credits</div>
             <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--accent-secondary)' }}>
               {totalCredits} Credits
             </div>
           </div>
           <div style={{ height: '35px', width: '1px', background: 'var(--border-color)' }} />
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Recommended Self-Study</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Recommended Self-Study</div>
             <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--accent-emerald)' }}>
               ~{estimatedWeeklySelfStudy} Hours/Wk
             </div>

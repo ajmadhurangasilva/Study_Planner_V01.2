@@ -2,23 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { X, User, Mail, GraduationCap, Hash, Edit3, Save, LogOut, Trash2, Download, Shield, BookOpen, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
 import { updateUserProfile, deleteAccount, getScopedStorage, logoutUser } from '../utils/authStore';
 
+// ── Small Section Heading ─────────────────────────────────────────────────────
 function SectionLabel({ children }) {
   return (
-    <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.08em', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.75rem', marginTop: '1.5rem' }}>
+    <p style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.75rem', marginTop: '1.5rem' }}>
       {children}
     </p>
   );
 }
 
+// ── Info Row ──────────────────────────────────────────────────────────────────
 function InfoRow({ icon: Icon, label, value, accent }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', padding: '0.85rem 0', borderBottom: '1px solid var(--border-color)' }}>
-      <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: accent || 'var(--accent-light-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <Icon size={18} color="var(--accent-primary)" />
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
+      <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: accent || 'rgba(99,102,241,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Icon size={16} color="var(--accent-primary)" />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: '0.15rem', fontWeight: 600 }}>{label}</p>
-        <p style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <p style={{ fontSize: '0.73rem', color: 'var(--text-muted)', marginBottom: '0.1rem' }}>{label}</p>
+        <p style={{ fontSize: '0.92rem', fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {value || <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>Not provided</span>}
         </p>
       </div>
@@ -26,10 +28,11 @@ function InfoRow({ icon: Icon, label, value, accent }) {
   );
 }
 
+// ── Edit Input ────────────────────────────────────────────────────────────────
 function EditField({ id, label, value, onChange, placeholder, type = 'text' }) {
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <label htmlFor={id} style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
+    <div style={{ marginBottom: '0.9rem' }}>
+      <label htmlFor={id} style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
         {label}
       </label>
       <input id={id} type={type} value={value} onChange={onChange} placeholder={placeholder} className="input-field" />
@@ -37,10 +40,11 @@ function EditField({ id, label, value, onChange, placeholder, type = 'text' }) {
   );
 }
 
+// ── Main ProfileModal ─────────────────────────────────────────────────────────
 export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onClose }) {
   const [editMode, setEditMode] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'data'
 
   const [fullName, setFullName] = useState(currentUser.profile?.fullName || '');
   const [email, setEmail] = useState(currentUser.profile?.email || '');
@@ -115,16 +119,16 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
       {/* Backdrop */}
       <div
         onClick={onClose}
-        style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(6px)', zIndex: 300 }}
+        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', zIndex: 300 }}
       />
 
       {/* Drawer */}
       <div style={{
         position: 'fixed', top: 0, right: 0, bottom: 0, zIndex: 400,
         width: '100%', maxWidth: '420px',
-        background: 'var(--bg-card)',
+        background: 'var(--bg-main)',
         borderLeft: '1px solid var(--border-color)',
-        boxShadow: 'var(--shadow-lg)',
+        boxShadow: '-12px 0 48px rgba(0,0,0,0.5)',
         display: 'flex', flexDirection: 'column',
         animation: 'slideInRight 0.3s cubic-bezier(0.4,0,0.2,1)',
         overflowY: 'auto',
@@ -133,50 +137,49 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
         <div style={{
           padding: '1.25rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           borderBottom: '1px solid var(--border-color)',
-          background: 'linear-gradient(135deg, #ffffff 0%, #edf5ff 100%)',
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(6,182,212,0.08) 100%)',
           flexShrink: 0,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{
-              width: '40px', height: '40px', borderRadius: '12px',
-              background: 'var(--accent-primary)',
+              width: '38px', height: '38px', borderRadius: '12px',
+              background: 'var(--gradient-main)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 14px rgba(37,99,235,0.3)',
+              boxShadow: '0 0 16px rgba(99,102,241,0.4)',
             }}>
-              <User size={20} color="#fff" />
+              <User size={18} color="#fff" />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0 }}>My Profile</h2>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0, fontWeight: 600 }}>Account & Data Settings</p>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, margin: 0 }}>My Profile</h2>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Account & Data Settings</p>
             </div>
           </div>
-          <button onClick={onClose} className="btn btn-secondary" style={{ padding: '0.45rem', borderRadius: '50%' }} id="profile-close-btn">
+          <button onClick={onClose} className="btn btn-secondary" style={{ padding: '0.45rem', borderRadius: '8px' }} id="profile-close-btn">
             <X size={18} />
           </button>
         </div>
 
         {/* Avatar + Name */}
         <div style={{
-          padding: '1.75rem 1.5rem 1.25rem', textAlign: 'center',
-          background: 'var(--bg-input)',
-          borderBottom: '1px solid var(--border-color)',
+          padding: '1.5rem 1.5rem 1rem', textAlign: 'center',
+          background: 'rgba(99,102,241,0.04)',
           flexShrink: 0,
         }}>
           <div style={{
-            width: '76px', height: '76px', borderRadius: '50%',
-            background: 'var(--accent-primary)',
+            width: '72px', height: '72px', borderRadius: '50%',
+            background: 'var(--gradient-main)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 0.85rem',
-            fontSize: '1.6rem', fontWeight: 800, color: '#fff',
-            boxShadow: '0 6px 20px rgba(37,99,235,0.35)',
+            margin: '0 auto 0.75rem',
+            fontSize: '1.5rem', fontWeight: 800, color: '#fff',
+            boxShadow: '0 0 24px rgba(99,102,241,0.35)',
           }}>
             {avatarInitials}
           </div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0 }}>
             {currentUser.profile?.fullName || currentUser.username}
           </h3>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem', fontWeight: 600 }}>@{currentUser.username}</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '0.65rem', flexWrap: 'wrap' }}>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>@{currentUser.username}</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
             {currentUser.profile?.degree && (
               <span className="badge badge-indigo">{currentUser.profile.degree}</span>
             )}
@@ -192,10 +195,10 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
         }}>
           {[{ key: 'profile', label: '👤 Profile' }, { key: 'data', label: '💾 My Data' }].map(({ key, label }) => (
             <button key={key} onClick={() => setActiveTab(key)} style={{
-              flex: 1, padding: '0.85rem', border: 'none', background: 'transparent',
+              flex: 1, padding: '0.8rem', border: 'none', background: 'transparent',
               color: activeTab === key ? 'var(--accent-primary)' : 'var(--text-secondary)',
-              fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer',
-              borderBottom: activeTab === key ? '3px solid var(--accent-primary)' : '3px solid transparent',
+              fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer',
+              borderBottom: activeTab === key ? '2px solid var(--accent-primary)' : '2px solid transparent',
               transition: 'all 0.2s',
             }}>
               {label}
@@ -223,7 +226,7 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
                     onClick={() => setEditMode(true)}
                     className="btn btn-secondary"
                     id="edit-profile-btn"
-                    style={{ width: '100%', marginTop: '1.4rem', borderRadius: 'var(--radius-pill)' }}
+                    style={{ width: '100%', marginTop: '1.25rem' }}
                   >
                     <Edit3 size={15} /> Edit Profile
                   </button>
@@ -237,7 +240,7 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
 
                   <div style={{ display: 'flex', gap: '0.6rem', marginTop: '0.5rem' }}>
                     <button onClick={handleSaveProfile} className="btn btn-primary" id="save-profile-btn" style={{ flex: 1 }}>
-                      <Save size={15} /> Save
+                      <Save size={15} /> Save Changes
                     </button>
                     <button onClick={() => setEditMode(false)} className="btn btn-secondary" id="cancel-edit-btn" style={{ flex: 1 }}>
                       Cancel
@@ -252,7 +255,7 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
                 onClick={onLogout}
                 className="btn btn-secondary"
                 id="logout-btn"
-                style={{ width: '100%', marginBottom: '0.6rem', borderRadius: 'var(--radius-pill)' }}
+                style={{ width: '100%', marginBottom: '0.6rem' }}
               >
                 <LogOut size={15} /> Log Out
               </button>
@@ -265,32 +268,32 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
               <SectionLabel>Stored Data Summary</SectionLabel>
 
               {/* Stats grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.65rem', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.65rem', marginBottom: '1rem' }}>
                 {[
-                  { label: 'Modules', value: moduleCount, icon: BookOpen, color: 'var(--accent-light-blue)' },
-                  { label: 'Completed', value: completedCount, icon: CheckCircle2, color: 'rgba(16,185,129,0.12)' },
-                  { label: 'Incomplete', value: incompleteCount, icon: Clock, color: 'rgba(245,158,11,0.12)' },
+                  { label: 'Modules', value: moduleCount, icon: BookOpen, color: 'rgba(99,102,241,0.15)' },
+                  { label: 'Completed', value: completedCount, icon: CheckCircle2, color: 'rgba(16,185,129,0.15)' },
+                  { label: 'Incomplete', value: incompleteCount, icon: Clock, color: 'rgba(245,158,11,0.15)' },
                 ].map(({ label, value, icon: Icon, color }) => (
-                  <div key={label} className="glass-card" style={{ padding: '0.95rem 0.5rem', textAlign: 'center' }}>
+                  <div key={label} className="glass-card" style={{ padding: '0.85rem', textAlign: 'center' }}>
                     <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
-                      <Icon size={16} color="var(--accent-primary)" />
+                      <Icon size={15} color="var(--accent-primary)" />
                     </div>
-                    <p style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0 }}>{value}</p>
-                    <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>{label}</p>
+                    <p style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0 }}>{value}</p>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{label}</p>
                   </div>
                 ))}
               </div>
 
               {/* Data keys list */}
-              <div style={{ background: 'var(--bg-input)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', padding: '0.85rem', marginBottom: '1.25rem' }}>
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: 700 }}>Stored Keys</p>
+              <div style={{ background: 'var(--bg-input)', borderRadius: '10px', border: '1px solid var(--border-color)', padding: '0.75rem', marginBottom: '1rem' }}>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: 600 }}>Stored Keys</p>
                 {Object.keys(allData).length === 0 ? (
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>No data stored yet.</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>No data stored yet.</p>
                 ) : (
                   Object.keys(allData).map((k) => (
-                    <div key={k} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid var(--border-color)' }}>
-                      <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontFamily: 'monospace', fontWeight: 600 }}>{k}</span>
-                      <ChevronRight size={14} color="var(--text-muted)" />
+                    <div key={k} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.3rem 0', borderBottom: '1px solid var(--border-color)' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{k}</span>
+                      <ChevronRight size={12} color="var(--text-muted)" />
                     </div>
                   ))
                 )}
@@ -302,7 +305,7 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
                 onClick={handleExport}
                 className="btn btn-secondary"
                 id="export-data-btn"
-                style={{ width: '100%', marginBottom: '0.6rem', borderRadius: 'var(--radius-pill)' }}
+                style={{ width: '100%', marginBottom: '0.6rem' }}
               >
                 <Download size={15} /> Export My Data (JSON)
               </button>
@@ -314,18 +317,18 @@ export default function ProfileModal({ currentUser, onUpdateUser, onLogout, onCl
                   onClick={() => setConfirmDelete(true)}
                   className="btn btn-danger"
                   id="delete-account-btn"
-                  style={{ width: '100%', borderRadius: 'var(--radius-pill)' }}
+                  style={{ width: '100%' }}
                 >
-                  <Trash2 size={15} /> Delete Account & Data
+                  <Trash2 size={15} /> Delete My Account & Data
                 </button>
               ) : (
-                <div style={{ background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.25)', borderRadius: 'var(--radius-sm)', padding: '1rem' }}>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--accent-rose)', marginBottom: '0.85rem', lineHeight: 1.5, fontWeight: 500 }}>
-                    ⚠️ Permanently delete account and all study planner data from this device?
+                <div style={{ background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: '10px', padding: '1rem' }}>
+                  <p style={{ fontSize: '0.85rem', color: '#f87171', marginBottom: '0.75rem', lineHeight: 1.5 }}>
+                    ⚠️ This will permanently delete your account, all modules, and all progress data from this device. This cannot be undone.
                   </p>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button onClick={handleDeleteAccount} className="btn btn-danger" id="confirm-delete-btn" style={{ flex: 1, fontSize: '0.85rem' }}>
-                      <Trash2 size={14} /> Yes, Delete
+                      <Trash2 size={14} /> Yes, Delete Everything
                     </button>
                     <button onClick={() => setConfirmDelete(false)} className="btn btn-secondary" id="cancel-delete-btn" style={{ flex: 1, fontSize: '0.85rem' }}>
                       Cancel

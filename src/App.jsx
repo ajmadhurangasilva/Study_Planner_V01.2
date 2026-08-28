@@ -169,15 +169,10 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main style={{ flex: 1, padding: '2rem 1.5rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-        {/* Step 0: Home Page / My Task Dashboard */}
+      <main style={{ flex: 1, padding: '2rem 1.5rem', maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+        {/* Step 0: Home Page */}
         {currentStep === 0 && (
-          <HomePage
-            planResult={planResult}
-            currentUser={currentUser}
-            onStartPlanner={() => goToStep(1)}
-            onGoToStep={goToStep}
-          />
+          <HomePage onStartPlanner={() => goToStep(1)} />
         )}
 
         {/* Step 1: Modules & Credit Values */}
@@ -229,12 +224,12 @@ export default function App() {
       <footer className="no-print" style={{
         textAlign: 'center',
         padding: '1.5rem',
-        fontSize: '0.8rem',
+        borderTop: '1px solid var(--border-color)',
+        fontSize: '0.85rem',
         color: 'var(--text-muted)',
-        fontWeight: 500,
-        letterSpacing: '0.01em'
+        background: 'var(--bg-main)'
       }}>
-        Study Time Allocation System • Built for Student Success
+        🇱🇰 Study Time Allocation System • Built for Student Success
       </footer>
     </div>
   );

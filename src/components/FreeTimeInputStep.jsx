@@ -59,7 +59,7 @@ export default function FreeTimeInputStep({
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '3rem' }}>
-      {/* Title Header */}
+      {/* Title */}
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
           Daily Free Time Period Selector
@@ -69,10 +69,10 @@ export default function FreeTimeInputStep({
         </p>
       </div>
 
-      {/* 7-Day Free Time Slots Grid */}
+      {/* 7-Day Free Time Slots Grid Matching Screenshot Exact Layout */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
         gap: '1.5rem',
         marginBottom: '2.5rem'
       }}>
@@ -87,6 +87,9 @@ export default function FreeTimeInputStep({
               className="glass-card"
               style={{
                 padding: '1.5rem',
+                border: isWeekend ? '1px solid rgba(6, 182, 212, 0.5)' : '1px solid rgba(99, 102, 241, 0.4)',
+                borderRadius: '16px',
+                boxShadow: isWeekend ? '0 0 20px rgba(6, 182, 212, 0.15)' : '0 0 20px rgba(99, 102, 241, 0.15)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between'
@@ -98,14 +101,12 @@ export default function FreeTimeInputStep({
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  marginBottom: '1.25rem',
-                  paddingBottom: '0.5rem',
-                  borderBottom: '1px solid var(--border-color)'
+                  marginBottom: '1.25rem'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                     <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>{day}</h3>
                     {isWeekend && (
-                      <span style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 700 }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--accent-secondary)', fontWeight: 600 }}>
                         (Weekend)
                       </span>
                     )}
@@ -116,8 +117,8 @@ export default function FreeTimeInputStep({
                   </span>
                 </div>
 
-                {/* Time Slot Input Rows */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.25rem' }}>
+                {/* Time Slot Input Rows matching screenshot design */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.25rem' }}>
                   {slots.map((slot, index) => {
                     const slotHrs = Math.round(calculateSlotDuration(slot.start, slot.end) * 10) / 10;
 
@@ -125,8 +126,8 @@ export default function FreeTimeInputStep({
                       <div
                         key={index}
                         style={{
-                          background: 'var(--bg-input)',
-                          borderRadius: 'var(--radius-sm)',
+                          background: 'rgba(13, 20, 36, 0.75)',
+                          borderRadius: '12px',
                           padding: '0.85rem 1rem',
                           border: '1px solid var(--border-color)',
                           display: 'flex',
@@ -137,7 +138,7 @@ export default function FreeTimeInputStep({
                       >
                         {/* From Input */}
                         <div style={{ flex: 1 }}>
-                          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem', fontWeight: 600 }}>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
                             From
                           </span>
                           <input
@@ -146,19 +147,21 @@ export default function FreeTimeInputStep({
                             onChange={(e) => handleSlotChange(day, index, 'start', e.target.value)}
                             className="input-field"
                             style={{
-                              padding: '0.45rem 0.6rem',
+                              padding: '0.4rem 0.5rem',
                               fontSize: '0.88rem',
                               fontWeight: 700,
+                              background: 'rgba(0, 0, 0, 0.3)',
+                              borderRadius: '8px',
                               textAlign: 'center'
                             }}
                           />
                         </div>
 
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '1.1rem', fontWeight: 600 }}>to</span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '1rem' }}>to</span>
 
                         {/* Until Input */}
                         <div style={{ flex: 1 }}>
-                          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem', fontWeight: 600 }}>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
                             Until
                           </span>
                           <input
@@ -167,17 +170,19 @@ export default function FreeTimeInputStep({
                             onChange={(e) => handleSlotChange(day, index, 'end', e.target.value)}
                             className="input-field"
                             style={{
-                              padding: '0.45rem 0.6rem',
+                              padding: '0.4rem 0.5rem',
                               fontSize: '0.88rem',
                               fontWeight: 700,
+                              background: 'rgba(0, 0, 0, 0.3)',
+                              borderRadius: '8px',
                               textAlign: 'center'
                             }}
                           />
                         </div>
 
                         {/* Duration badge and Trash Icon */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.9rem' }}>
-                          <span style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', fontWeight: 700 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.8rem' }}>
+                          <span style={{ fontSize: '0.78rem', color: 'var(--accent-secondary)', fontWeight: 700 }}>
                             ({slotHrs}h)
                           </span>
 
@@ -187,7 +192,7 @@ export default function FreeTimeInputStep({
                             style={{
                               background: 'none',
                               border: 'none',
-                              color: 'var(--accent-rose)',
+                              color: '#f43f5e',
                               cursor: 'pointer',
                               padding: '0.25rem',
                               display: 'flex',
@@ -211,9 +216,10 @@ export default function FreeTimeInputStep({
                 className="btn btn-secondary"
                 style={{
                   width: '100%',
-                  padding: '0.65rem',
+                  padding: '0.6rem',
                   fontSize: '0.85rem',
-                  borderRadius: 'var(--radius-sm)'
+                  borderRadius: '10px',
+                  background: 'rgba(255, 255, 255, 0.04)'
                 }}
               >
                 + Add Another Free Slot
@@ -223,31 +229,32 @@ export default function FreeTimeInputStep({
         })}
       </div>
 
-      {/* Summary Navigation Footer */}
+      {/* Summary Navigation Footer matching screenshot layout (Buttons on edges, stats centered) */}
       <div className="glass-card" style={{
         padding: '1.25rem 2rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '1.5rem'
+        gap: '1.5rem',
+        borderColor: 'var(--border-glow)'
       }}>
         {/* Left: Previous Button */}
-        <button onClick={onPrevStep} className="btn btn-secondary" style={{ padding: '0.85rem 1.6rem' }}>
+        <button onClick={onPrevStep} className="btn btn-secondary" style={{ padding: '0.85rem 1.5rem' }}>
           <ArrowLeft size={18} /> Previous
         </button>
 
         {/* Center: Stats Summary */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', margin: '0 auto' }}>
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Target Study Load</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>SLQF Rec. Study Target</div>
             <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--accent-primary)' }}>
               {totalSLQFHours} Hours/Wk
             </div>
           </div>
           <div style={{ height: '35px', width: '1px', background: 'var(--border-color)' }} />
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Total Free Time Available</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Total Free Time Available</div>
             <div style={{
               fontSize: '1.3rem',
               fontWeight: 800,
