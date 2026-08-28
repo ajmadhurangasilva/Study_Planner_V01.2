@@ -36,7 +36,7 @@ export default function Navbar({ currentStep, setCurrentStep, theme, setTheme, o
         boxShadow: 'var(--shadow-sm)'
       }} className="no-print">
         <div style={{
-          maxWidth: '1240px',
+          maxWidth: '1200px',
           margin: '0 auto',
           display: 'flex',
           alignItems: 'center',
