@@ -111,7 +111,7 @@ export default function AuthPage({ onAuthSuccess }) {
         position: 'fixed', top: '-20%', left: '-10%',
         width: '60vw', height: '60vw', maxWidth: '700px', maxHeight: '700px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%)',
         animation: 'blobFloat 8s ease-in-out infinite',
         pointerEvents: 'none',
       }} />
@@ -119,7 +119,7 @@ export default function AuthPage({ onAuthSuccess }) {
         position: 'fixed', bottom: '-20%', right: '-10%',
         width: '55vw', height: '55vw', maxWidth: '650px', maxHeight: '650px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%)',
         animation: 'blobFloat 10s ease-in-out infinite reverse',
         pointerEvents: 'none',
       }} />
@@ -128,32 +128,33 @@ export default function AuthPage({ onAuthSuccess }) {
         {/* Logo + App Name */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '60px', height: '60px', borderRadius: '18px',
+            width: '64px', height: '64px', borderRadius: '20px',
             background: 'var(--gradient-main)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 1rem',
-            boxShadow: '0 0 40px rgba(99,102,241,0.4)',
+            boxShadow: '0 8px 24px rgba(37,99,235,0.35)',
           }}>
-            <BookOpen size={28} color="#fff" />
+            <BookOpen size={30} color="#fff" />
           </div>
-          <h1 style={{ fontSize: '1.9rem', fontWeight: 800, marginBottom: '0.25rem' }}>Study Planner</h1>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-            Study Time Allocation System
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.25rem', color: 'var(--text-primary)' }}>Study Planner</h1>
+          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+            Time Allocation System
           </p>
         </div>
 
         {/* Auth Card */}
         <div className="glass-card" style={{
-          padding: '2rem 2.2rem',
-          border: '1px solid var(--border-glow)',
-          boxShadow: '0 0 40px rgba(99,102,241,0.12), var(--shadow-lg)',
+          padding: '2.2rem',
+          border: '1.5px solid var(--border-color)',
+          boxShadow: 'var(--shadow-md)',
+          borderRadius: 'var(--radius-lg)'
         }}>
           {/* Tab Switcher */}
           <div style={{
             display: 'flex', gap: '0.3rem',
-            background: 'rgba(255,255,255,0.04)', borderRadius: '10px',
+            background: 'var(--bg-input)', borderRadius: '9999px',
             padding: '0.3rem', marginBottom: '1.8rem',
-            border: '1px solid var(--border-color)',
+            border: '1.5px solid var(--border-color)',
           }}>
             {['login', 'register'].map((t) => (
               <button
